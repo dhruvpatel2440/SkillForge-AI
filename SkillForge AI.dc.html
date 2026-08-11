@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="_ds/classical-bf10ad5d-9dd3-4287-b90d-c6a9433456fa/styles.css">
+<script src="_ds/classical-bf10ad5d-9dd3-4287-b90d-c6a9433456fa/_ds_bundle.js"></script>
+<style>
+  body { margin: 0; }
+  a:hover { color: var(--color-accent-700); }
+  @keyframes sf-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes sf-pulse { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+  @keyframes sf-sweep { from { transform: translateX(-100%); } to { transform: translateX(320%); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);font-size:15px">
+
+  <div class="nav" style="position:sticky;top:0;z-index:9;background:var(--color-bg);padding-inline:var(--space-6)">
+    <div class="nav-brand" style="letter-spacing:-.01em">SkillForge<span style="color:var(--color-accent)"> AI</span></div>
+    <sc-if value="{{ navReady }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:var(--space-4)">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
+          <a href="#" onClick="{{ item.go }}" aria-current="{{ item.cur }}" style="font-size:13px;letter-spacing:.02em">{{ item.label }}</a>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ navIdle }}" hint-placeholder-val="{{ true }}">
+      <div class="text-muted" style="font-size:12px;letter-spacing:.06em;text-transform:uppercase">Evidence-linked skill roadmaps</div>
+    </sc-if>
+  </div>
+
+  <!-- ─────────── 1. LANDING ─────────── -->
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6) 64px">
+      <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:var(--space-8);align-items:start">
+        <div>
+          <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);font-variant-numeric:tabular-nums">For students · 2026 job market</div>
+          <h1 style="font-family:var(--font-heading);font-weight:400;font-size:60px;line-height:1.04;letter-spacing:-.02em;margin:var(--space-4) 0 var(--space-4)">Every recommendation<br>carries a receipt.</h1>
+          <p style="font-size:17px;line-height:1.65;max-width:46ch;text-wrap:pretty">SkillForge reads your resume, extracts skills only where it can quote the line they came from, compares them against live job descriptions for your target role, and returns a week-by-week roadmap that reorders itself as you prove competence.</p>
+          <div style="display:flex;align-items:center;gap:var(--space-4);margin-top:var(--space-6)">
+            <button class="btn btn-primary" onClick="{{ start }}" style="font-size:15px;padding:12px 22px">Analyze My Resume</button>
+            <span class="text-muted" style="font-size:12px">No signup. 30 seconds to a roadmap.</span>
+          </div>
+        </div>
+        <div style="border:1px solid var(--color-divider);border-radius:var(--radius-md);padding:var(--space-4)">
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent);margin-bottom:var(--space-3)">The difference</div>
+          <div style="display:grid;grid-template-columns:1fr;gap:var(--space-3)">
+            <div>
+              <div style="font-family:var(--font-heading);font-size:15px;margin-bottom:6px">Generic course recommender</div>
+              <p class="text-muted" style="font-size:13px;font-style:italic;margin:0">“You should learn React. Here are 40 courses.”</p>
+            </div>
+            <hr class="hr" style="margin:0">
+            <div>
+              <div style="font-family:var(--font-heading);font-size:15px;margin-bottom:6px">SkillForge</div>
+              <p style="font-size:13px;margin:0;line-height:1.6">“React appears in <strong>87%</strong> of Full Stack postings. You listed it under <em>Skills</em> but no project backs it — that's <strong>weak evidence</strong>, not a skill. Week 3 closes it with one mini-project and a checkpoint.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr" style="margin:var(--space-8) 0 var(--space-6)">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)">
+        <sc-for list="{{ landingPoints }}" as="p" hint-placeholder-count="3">
+          <div>
+            <div style="font-family:var(--font-heading);font-size:34px;font-weight:400;color:var(--color-accent);font-variant-numeric:tabular-nums;line-height:1">{{ p.n }}</div>
+            <div style="font-family:var(--font-heading);font-size:18px;margin:var(--space-2) 0 6px">{{ p.title }}</div>
+            <p class="text-muted" style="font-size:13px;margin:0;line-height:1.6;text-wrap:pretty">{{ p.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 2. ONBOARDING ─────────── -->
+  <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:760px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-6)">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="{{ s.dot }}">{{ s.n }}</span>
+            <span style="{{ s.txt }}">{{ s.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ onStep1 }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:var(--space-2)">Which role are you aiming at?</h2>
+          <p class="text-muted" style="font-size:14px;max-width:56ch">This selects the job-description corpus your resume is diffed against. Demand frequencies are computed per role.</p>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3);margin-top:var(--space-4)">
+            <sc-for list="{{ roleOptions }}" as="r" hint-placeholder-count="5">
+              <button onClick="{{ r.pick }}" style="{{ r.style }}">
+                <span style="font-family:var(--font-heading);font-size:18px">{{ r.name }}</span>
+                <span class="text-muted" style="font-size:12px;font-family:var(--font-body);font-variant-numeric:tabular-nums">{{ r.meta }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onStep2 }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:var(--space-2)">How long do you have?</h2>
+          <p class="text-muted" style="font-size:14px;max-width:56ch">Timeline sets how many gaps the roadmap can realistically close, and in what order.</p>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4)">
+            <sc-for list="{{ timelineOptions }}" as="t" hint-placeholder-count="3">
+              <button onClick="{{ t.pick }}" style="{{ t.style }}">
+                <span style="font-family:var(--font-heading);font-size:30px;font-variant-numeric:tabular-nums;line-height:1">{{ t.n }}</span>
+                <span class="text-muted" style="font-size:12px">months</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onStep3 }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:var(--space-2)">Hours per week?</h2>
+          <p class="text-muted" style="font-size:14px;max-width:56ch">Module density. Five hours buys one concept plus one mini-project a week; twenty buys a portfolio project alongside it.</p>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-4)">
+            <sc-for list="{{ hourOptions }}" as="h" hint-placeholder-count="3">
+              <button onClick="{{ h.pick }}" style="{{ h.style }}">
+                <span style="font-family:var(--font-heading);font-size:30px;font-variant-numeric:tabular-nums;line-height:1">{{ h.n }}</span>
+                <span class="text-muted" style="font-size:12px">hrs / week</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <hr class="hr">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <button class="btn btn-ghost" onClick="{{ back }}">← Back</button>
+        <button class="btn btn-primary" onClick="{{ next }}">{{ nextLabel }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 3. UPLOAD ─────────── -->
+  <sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:720px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <h2 style="font-weight:400;font-size:34px;margin-bottom:var(--space-2)">Upload your resume</h2>
+      <p class="text-muted" style="font-size:14px">PDF only. Text is extracted with PyMuPDF, hashed, and stored — the raw lines are what every later citation points back to.</p>
+
+      <div style="{{ dropStyle }}" onClick="{{ runUpload }}">
+        <div style="font-family:var(--font-heading);font-size:22px;margin-bottom:6px">{{ dropTitle }}</div>
+        <div class="text-muted" style="font-size:13px">{{ dropSub }}</div>
+      </div>
+
+      <div style="margin-top:var(--space-6);display:grid;gap:var(--space-2)">
+        <sc-for list="{{ stages }}" as="st" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:10px var(--space-3);border:1px solid var(--color-divider);border-radius:var(--radius-md)">
+            <span style="{{ st.mark }}">{{ st.glyph }}</span>
+            <span style="{{ st.label }}">{{ st.name }}</span>
+            <span class="text-muted" style="margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums">{{ st.note }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 4. SKILL PROFILE ─────────── -->
+  <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-6)">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Skill profile</h2>
+          <p class="text-muted" style="font-size:14px;max-width:62ch;margin:0">{{ profileLine }}</p>
+        </div>
+        <button class="btn btn-primary" onClick="{{ toGaps }}">Confirm &amp; run gap analysis</button>
+      </div>
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--space-3)">
+        <sc-for list="{{ skillCards }}" as="s" hint-placeholder-count="9">
+          <div class="card" style="animation:sf-rise .3s ease both">
+            <div style="display:flex;align-items:baseline;gap:var(--space-2)">
+              <span style="font-family:var(--font-heading);font-size:19px">{{ s.name }}</span>
+              <span class="{{ s.tagCls }}" style="margin-left:auto">{{ s.strengthLabel }}</span>
+            </div>
+            <div style="border-left:2px solid var(--color-accent);padding-left:var(--space-3);font-style:italic;font-size:13px;line-height:1.55;color:color-mix(in srgb, var(--color-text) 78%, transparent)">“{{ s.evidence }}”</div>
+            <div class="card-meta" style="justify-content:space-between">
+              <span style="font-variant-numeric:tabular-nums">{{ s.source }}</span>
+              <span style="display:flex;gap:6px">
+                <button class="btn btn-secondary" onClick="{{ s.cycle }}" style="font-size:11px;padding:3px 9px">{{ s.level }} ↻</button>
+                <button class="btn btn-ghost" onClick="{{ s.remove }}" style="font-size:11px">Delete</button>
+              </span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 5. GAP ANALYSIS ─────────── -->
+  <sc-if value="{{ isGaps }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1120px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-6)">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Gap analysis</h2>
+          <p class="text-muted" style="font-size:14px;margin:0">{{ gapLine }}</p>
+        </div>
+        <button class="btn btn-primary" onClick="{{ buildRoadmap }}">Build my roadmap →</button>
+      </div>
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:340px 1fr;gap:var(--space-8);align-items:start">
+        <div>
+          <svg viewBox="0 0 300 290" style="width:100%;height:auto;overflow:visible">
+            <sc-for list="{{ radarRings }}" as="ring" hint-placeholder-count="4">
+              <polygon points="{{ ring.pts }}" fill="none" stroke="var(--color-divider)" stroke-width="1"></polygon>
+            </sc-for>
+            <sc-for list="{{ radarSpokes }}" as="sp" hint-placeholder-count="6">
+              <line x1="150" y1="140" x2="{{ sp.x }}" y2="{{ sp.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+            </sc-for>
+            <polygon points="{{ radarTarget }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="1.5" stroke-dasharray="4 4"></polygon>
+            <polygon points="{{ radarYou }}" fill="color-mix(in srgb, var(--color-accent) 16%, transparent)" stroke="var(--color-accent)" stroke-width="2"></polygon>
+            <text x="150" y="20" text-anchor="middle" font-family="Lora, serif" font-size="11" fill="#605d5d">Frontend</text>
+            <text x="258" y="82" text-anchor="start" font-family="Lora, serif" font-size="11" fill="#605d5d">Backend</text>
+            <text x="258" y="206" text-anchor="start" font-family="Lora, serif" font-size="11" fill="#605d5d">Data</text>
+            <text x="150" y="268" text-anchor="middle" font-family="Lora, serif" font-size="11" fill="#605d5d">DevOps</text>
+            <text x="43" y="206" text-anchor="end" font-family="Lora, serif" font-size="11" fill="#605d5d">Testing</text>
+            <text x="43" y="82" text-anchor="end" font-family="Lora, serif" font-size="11" fill="#605d5d">Tooling</text>
+          </svg>
+          <div style="display:flex;gap:var(--space-4);justify-content:center;font-size:11px;margin-top:var(--space-2)">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:2px;background:var(--color-accent);display:inline-block"></span>Your coverage</span>
+            <span style="display:flex;align-items:center;gap:6px" class="text-muted"><span style="width:14px;height:0;border-top:2px dashed var(--color-neutral-600);display:inline-block"></span>Role requirement</span>
+          </div>
+        </div>
+
+        <div style="display:grid;gap:var(--space-4)">
+          <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="3">
+            <div>
+              <div style="display:flex;align-items:baseline;gap:var(--space-2);margin-bottom:var(--space-2)">
+                <h4 style="margin:0;font-size:19px;color:{{ b.color }}">{{ b.title }}</h4>
+                <span class="text-muted" style="font-size:12px;font-variant-numeric:tabular-nums">{{ b.count }}</span>
+                <span class="text-muted" style="font-size:12px;margin-left:auto;font-style:italic">{{ b.rule }}</span>
+              </div>
+              <div style="border-top:1px solid var(--color-divider)">
+                <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:150px 1fr 64px;gap:var(--space-3);align-items:center;padding:9px 0;border-bottom:1px solid var(--color-divider)">
+                    <span style="font-family:var(--font-heading);font-size:16px">{{ it.name }}</span>
+                    <span style="display:flex;align-items:center;gap:var(--space-2)">
+                      <span style="flex:1;height:5px;background:var(--color-neutral-200);border-radius:2px;overflow:hidden;display:block"><span style="{{ it.bar }}"></span></span>
+                      <span class="text-muted" style="font-size:11px;width:130px;text-align:right">{{ it.note }}</span>
+                    </span>
+                    <span style="font-size:12px;font-variant-numeric:tabular-nums;text-align:right;color:{{ b.color }}">{{ it.demand }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 6. ROADMAP ─────────── -->
+  <sc-if value="{{ isRoadmap }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:960px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-6)">
+        <div>
+          <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Your roadmap</h2>
+          <p class="text-muted" style="font-size:14px;margin:0">{{ roadmapLine }}</p>
+        </div>
+        <span class="text-muted" style="font-size:12px;font-style:italic;text-align:right;max-width:26ch">Ordered by gap_size × market_demand × prerequisite readiness — not by catalog order.</span>
+      </div>
+
+      <sc-if value="{{ hasChangeLog }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:var(--space-4);border:1px solid var(--color-accent);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);background:color-mix(in srgb, var(--color-accent) 7%, transparent);animation:sf-rise .35s ease both">
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:6px">Roadmap recalculated</div>
+          <sc-for list="{{ changeLog }}" as="c" hint-placeholder-count="3">
+            <div style="font-size:13px;line-height:1.6;font-variant-numeric:tabular-nums">{{ c }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <hr class="hr">
+      <div style="display:grid;gap:0">
+        <sc-for list="{{ moduleRows }}" as="m" hint-placeholder-count="8">
+          <div style="{{ m.row }}">
+            <div style="width:74px;flex:none;text-align:center">
+              <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Week</div>
+              <div style="font-family:var(--font-heading);font-size:30px;line-height:1;font-variant-numeric:tabular-nums;color:{{ m.weekColor }}">{{ m.week }}</div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap">
+                <span style="font-family:var(--font-heading);font-size:20px">{{ m.title }}</span>
+                <span class="{{ m.tagCls }}">{{ m.tag }}</span>
+                <span style="{{ m.moveStyle }}">{{ m.move }}</span>
+              </div>
+              <p class="text-muted" style="font-size:13px;margin:5px 0 0;line-height:1.55;max-width:70ch">{{ m.summary }}</p>
+              <div style="display:flex;gap:var(--space-4);margin-top:8px;font-size:11px;font-variant-numeric:tabular-nums" class="text-muted">
+                <span>demand {{ m.demand }}</span>
+                <span>gap_score {{ m.score }}</span>
+                <span>{{ m.load }}</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary" onClick="{{ m.open }}" style="flex:none">{{ m.cta }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 7. MODULE DETAIL ─────────── -->
+  <sc-if value="{{ isModule }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:920px;margin:0 auto;padding:var(--space-6) var(--space-6) var(--space-8)">
+      <button class="btn btn-ghost" onClick="{{ toRoadmap }}" style="margin-bottom:var(--space-3)">← Roadmap</button>
+      <div style="display:flex;align-items:baseline;gap:var(--space-3)">
+        <span class="text-muted" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-variant-numeric:tabular-nums">Week {{ mod.week }}</span>
+        <h2 style="font-weight:400;font-size:36px;margin:0">{{ mod.title }}</h2>
+      </div>
+      <p style="font-size:15px;line-height:1.7;max-width:74ch;margin-top:var(--space-3);text-align:justify;hyphens:auto">{{ mod.summary }}</p>
+      <div class="text-muted" style="font-size:12px;font-style:italic">{{ mod.why }}</div>
+
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8);align-items:start">
+        <div>
+          <h4 style="font-size:17px;margin-bottom:var(--space-2)">Resources</h4>
+          <div style="border-top:1px solid var(--color-divider)">
+            <sc-for list="{{ mod.resources }}" as="r" hint-placeholder-count="3">
+              <div onClick="{{ r.toggle }}" style="{{ r.row }}">
+                <span style="{{ r.box }}">{{ r.check }}</span>
+                <span style="flex:1">
+                  <span style="{{ r.title }}">{{ r.name }}</span>
+                  <span class="text-muted" style="display:block;font-size:11px;font-variant-numeric:tabular-nums">{{ r.meta }}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+
+          <h4 style="font-size:17px;margin:var(--space-6) 0 var(--space-2)">Mini-project</h4>
+          <div class="card">
+            <div class="card-kicker">{{ mod.projectKicker }}</div>
+            <div class="card-title">{{ mod.projectTitle }}</div>
+            <p class="card-body" style="font-size:13px;line-height:1.6">{{ mod.projectBrief }}</p>
+            <div style="display:flex;gap:var(--space-2);margin-top:var(--space-1)">
+              <input class="input" placeholder="https://github.com/you/repo" value="{{ linkValue }}" onChange="{{ onLinkChange }}">
+              <button class="btn btn-primary" onClick="{{ submitLink }}" style="flex:none">{{ linkCta }}</button>
+            </div>
+            <sc-if value="{{ linkDone }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px;color:var(--color-accent-700);font-style:italic">Submitted — this repo now seeds your interview questions.</div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;align-items:baseline;gap:var(--space-2)">
+            <h4 style="font-size:17px;margin:0">Checkpoint quiz</h4>
+            <span class="text-muted" style="font-size:11px;font-variant-numeric:tabular-nums">{{ quizMeta }}</span>
+          </div>
+          <p class="text-muted" style="font-size:12px;font-style:italic;margin:6px 0 var(--space-3)">Scoring drives adaptation: ≥80% marks the skill acquired and re-scores every gap; 50–79% inserts reinforcement; below 50% demotes the skill and pushes a prerequisite ahead of it.</p>
+
+          <div style="display:grid;gap:var(--space-4)">
+            <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="5">
+              <div>
+                <div style="font-size:14px;line-height:1.5;margin-bottom:8px"><span class="text-muted" style="font-variant-numeric:tabular-nums">{{ q.n }}. </span>{{ q.text }}</div>
+                <div style="display:grid;gap:6px">
+                  <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="3">
+                    <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ quizOpen }}" hint-placeholder-val="{{ true }}">
+            <button class="btn btn-primary btn-block" onClick="{{ submitQuiz }}" disabled="{{ quizIncomplete }}" style="margin-top:var(--space-4)">{{ quizCta }}</button>
+          </sc-if>
+
+          <sc-if value="{{ quizScored }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:var(--space-4);border:1px solid var(--color-accent);border-radius:var(--radius-md);padding:var(--space-4);animation:sf-rise .35s ease both">
+              <div style="display:flex;align-items:baseline;gap:var(--space-3)">
+                <span style="font-family:var(--font-heading);font-size:40px;line-height:1;font-variant-numeric:tabular-nums;color:var(--color-accent)">{{ resultPct }}</span>
+                <span style="font-family:var(--font-heading);font-size:19px">{{ resultVerdict }}</span>
+              </div>
+              <hr class="hr" style="margin:var(--space-3) 0">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:6px">What the engine did</div>
+              <sc-for list="{{ resultLog }}" as="l" hint-placeholder-count="3">
+                <div style="font-size:13px;line-height:1.65;font-variant-numeric:tabular-nums">· {{ l }}</div>
+              </sc-for>
+              <button class="btn btn-primary btn-block" onClick="{{ toRoadmap }}" style="margin-top:var(--space-3)">See the reordered roadmap →</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 8. PROJECTS ─────────── -->
+  <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Portfolio projects</h2>
+      <p class="text-muted" style="font-size:14px;max-width:66ch">Bigger than the weekly minis. Each is scoped to close several open gaps at once, so a single repo moves multiple axes of the radar.</p>
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-4)">
+        <sc-for list="{{ portfolio }}" as="p" hint-placeholder-count="3">
+          <div class="card">
+            <div class="card-kicker">{{ p.kicker }}</div>
+            <div class="card-title" style="font-size:21px">{{ p.title }}</div>
+            <p class="card-body" style="font-size:13px;line-height:1.65">{{ p.brief }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <sc-for list="{{ p.stack }}" as="s" hint-placeholder-count="4">
+                <span class="tag tag-neutral">{{ s }}</span>
+              </sc-for>
+            </div>
+            <hr class="hr" style="margin:var(--space-2) 0">
+            <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent)">Closes</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <sc-for list="{{ p.closes }}" as="c" hint-placeholder-count="3">
+                <span class="tag tag-outline">{{ c }}</span>
+              </sc-for>
+            </div>
+            <div class="card-meta" style="justify-content:space-between;margin-top:var(--space-1)">
+              <span style="font-variant-numeric:tabular-nums">{{ p.scope }}</span>
+              <span style="font-variant-numeric:tabular-nums">covers {{ p.coverage }} of your open gaps</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 9. INTERVIEW PREP ─────────── -->
+  <sc-if value="{{ isInterview }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:900px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Interview prep</h2>
+      <p class="text-muted" style="font-size:14px;max-width:66ch">Filtered to your profile: your claimed skills, the gaps you have just closed, and questions generated from the repositories you submitted.</p>
+      <div style="display:flex;gap:var(--space-2);margin-top:var(--space-4)">
+        <sc-for list="{{ interviewFilters }}" as="f" hint-placeholder-count="4">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <hr class="hr">
+      <div style="display:grid;gap:0;border-top:1px solid var(--color-divider)">
+        <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6">
+          <div style="padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider);display:grid;grid-template-columns:1fr 190px;gap:var(--space-4);align-items:start">
+            <div>
+              <div style="font-family:var(--font-heading);font-size:19px;line-height:1.3;text-wrap:pretty">{{ q.text }}</div>
+              <p class="text-muted" style="font-size:12.5px;margin:8px 0 0;line-height:1.6;font-style:italic">{{ q.hint }}</p>
+            </div>
+            <div style="text-align:right">
+              <span class="{{ q.tagCls }}">{{ q.tag }}</span>
+              <div class="text-muted" style="font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums">{{ q.source }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noQuestions }}" hint-placeholder-val="{{ false }}">
+        <p class="text-muted" style="font-size:13px;font-style:italic;padding:var(--space-6) 0">Nothing in this filter yet. Submit a project link inside a module to generate repository questions.</p>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ─────────── 10. ANALYTICS ─────────── -->
+  <sc-if value="{{ isAnalytics }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1080px;margin:0 auto;padding:var(--space-8) var(--space-6)">
+      <h2 style="font-weight:400;font-size:34px;margin-bottom:6px">Analytics</h2>
+      <p class="text-muted" style="font-size:14px">Every chart here is a query over one table — progress_events. {{ eventLine }}</p>
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="border-left:1px solid var(--color-divider);padding-left:var(--space-3)">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">{{ s.label }}</div>
+            <div style="font-family:var(--font-heading);font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--color-accent)">{{ s.value }}</div>
+            <div class="text-muted" style="font-size:12px">{{ s.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <hr class="hr">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:var(--space-8);align-items:start">
+        <div>
+          <h4 style="font-size:17px;margin-bottom:var(--space-3)">Skill coverage over time</h4>
+          <svg viewBox="0 0 460 200" style="width:100%;height:auto">
+            <sc-for list="{{ chartGrid }}" as="g" hint-placeholder-count="4">
+              <line x1="34" y1="{{ g.y }}" x2="450" y2="{{ g.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+            </sc-for>
+            <text x="26" y="173" text-anchor="end" font-size="10" font-family="Lora, serif" fill="#7d7979">0%</text>
+            <text x="26" y="135.5" text-anchor="end" font-size="10" font-family="Lora, serif" fill="#7d7979">25%</text>
+            <text x="26" y="98" text-anchor="end" font-size="10" font-family="Lora, serif" fill="#7d7979">50%</text>
+            <text x="26" y="60.5" text-anchor="end" font-size="10" font-family="Lora, serif" fill="#7d7979">75%</text>
+            <text x="26" y="23" text-anchor="end" font-size="10" font-family="Lora, serif" fill="#7d7979">100%</text>
+            <path d="{{ coveragePath }}" fill="none" stroke="var(--color-accent)" stroke-width="2"></path>
+            <sc-for list="{{ coverageDots }}" as="d" hint-placeholder-count="6">
+              <circle cx="{{ d.x }}" cy="{{ d.y }}" r="3" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2"></circle>
+            </sc-for>
+          </svg>
+          <div style="display:flex;justify-content:space-between;padding:0 2% 0 7.4%;margin-top:-4px">
+            <sc-for list="{{ coverageTicks }}" as="t" hint-placeholder-count="4">
+              <span class="text-muted" style="font-size:10.5px;font-variant-numeric:tabular-nums">{{ t.label }}</span>
+            </sc-for>
+          </div>
+
+          <h4 style="font-size:17px;margin:var(--space-6) 0 var(--space-3)">Weekly consistency</h4>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{ streakCells }}" as="c" hint-placeholder-count="28">
+              <span style="{{ c.style }}"></span>
+            </sc-for>
+          </div>
+          <div class="text-muted" style="font-size:11.5px;margin-top:8px;font-variant-numeric:tabular-nums">{{ streakNote }}</div>
+        </div>
+
+        <div>
+          <h4 style="font-size:17px;margin-bottom:var(--space-3)">Before / after coverage</h4>
+          <svg viewBox="0 0 300 290" style="width:100%;height:auto;overflow:visible">
+            <sc-for list="{{ radarRings }}" as="ring" hint-placeholder-count="4">
+              <polygon points="{{ ring.pts }}" fill="none" stroke="var(--color-divider)" stroke-width="1"></polygon>
+            </sc-for>
+            <polygon points="{{ radarTarget }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="1.5" stroke-dasharray="4 4"></polygon>
+            <polygon points="{{ radarBaseline }}" fill="none" stroke="var(--color-neutral-500)" stroke-width="1.5"></polygon>
+            <polygon points="{{ radarYou }}" fill="color-mix(in srgb, var(--color-accent) 16%, transparent)" stroke="var(--color-accent)" stroke-width="2"></polygon>
+            <text x="150" y="20" text-anchor="middle" font-family="Lora, serif" font-size="11" fill="#605d5d">Frontend</text>
+            <text x="258" y="82" text-anchor="start" font-family="Lora, serif" font-size="11" fill="#605d5d">Backend</text>
+            <text x="258" y="206" text-anchor="start" font-family="Lora, serif" font-size="11" fill="#605d5d">Data</text>
+            <text x="150" y="268" text-anchor="middle" font-family="Lora, serif" font-size="11" fill="#605d5d">DevOps</text>
+            <text x="43" y="206" text-anchor="end" font-family="Lora, serif" font-size="11" fill="#605d5d">Testing</text>
+            <text x="43" y="82" text-anchor="end" font-family="Lora, serif" font-size="11" fill="#605d5d">Tooling</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;margin-top:var(--space-2)">
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:2px;background:var(--color-accent);display:inline-block"></span>Today</span>
+            <span style="display:flex;align-items:center;gap:8px" class="text-muted"><span style="width:14px;height:2px;background:var(--color-neutral-500);display:inline-block"></span>At upload</span>
+            <span style="display:flex;align-items:center;gap:8px" class="text-muted"><span style="width:14px;height:0;border-top:2px dashed var(--color-neutral-600);display:inline-block"></span>Role requirement</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr">
+      <h4 style="font-size:17px;margin-bottom:var(--space-2)">progress_events</h4>
+      <table class="table">
+        <thead><tr><th>Timestamp</th><th>Event</th><th>Detail</th></tr></thead>
+        <tbody>
+          <sc-for list="{{ eventRows }}" as="e" hint-placeholder-count="6">
+            <tr>
+              <td style="font-variant-numeric:tabular-nums;white-space:nowrap;font-size:12.5px" class="text-muted">{{ e.t }}</td>
+              <td style="font-size:12.5px"><span class="tag tag-neutral">{{ e.kind }}</span></td>
+              <td style="font-size:13px">{{ e.detail }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+const ROLES = [
+  { id: 'fullstack', name: 'Full Stack Developer', posts: 1240 },
+  { id: 'data', name: 'Data Analyst', posts: 980 },
+  { id: 'ml', name: 'ML Engineer', posts: 760 },
+  { id: 'sec', name: 'Cybersecurity Analyst', posts: 610 },
+  { id: 'cloud', name: 'Cloud Engineer', posts: 840 }
+];
+
+const REQS = {
+  fullstack: [['React',.87],['REST APIs',.79],['Node.js',.74],['SQL',.71],['TypeScript',.68],['Git',.90],['Docker',.55],['AWS',.52],['Testing',.48],['CI/CD',.44],['System Design',.38]],
+  data: [['SQL',.92],['Python',.84],['Pandas',.72],['Statistics',.66],['Excel',.61],['Tableau',.57],['Data Viz',.50],['A/B Testing',.41]],
+  ml: [['Python',.93],['ML Theory',.80],['PyTorch',.71],['Statistics',.68],['Deep Learning',.60],['SQL',.55],['MLOps',.48]],
+  sec: [['Networking',.78],['Linux',.74],['Python',.60],['Incident Response',.58],['SIEM',.55],['Threat Modeling',.50],['Cryptography',.45]],
+  cloud: [['AWS',.88],['Docker',.76],['Kubernetes',.69],['Linux',.70],['Terraform',.62],['CI/CD',.58],['Networking',.50]]
+};
+
+const PREREQ = { 'React': 'TypeScript', 'Node.js': 'TypeScript', 'AWS': 'Docker', 'CI/CD': 'Docker', 'System Design': 'Node.js', 'Kubernetes': 'Docker', 'Terraform': 'AWS', 'PyTorch': 'ML Theory', 'MLOps': 'Docker', 'Pandas': 'Python' };
+
+const AXIS = { 'React':'Frontend','JavaScript':'Frontend','HTML/CSS':'Frontend','TypeScript':'Frontend','Data Viz':'Frontend','Tableau':'Frontend','Node.js':'Backend','Python':'Backend','REST APIs':'Backend','System Design':'Backend','ML Theory':'Backend','PyTorch':'Backend','Deep Learning':'Backend','SQL':'Data','Pandas':'Data','Statistics':'Data','Excel':'Data','A/B Testing':'Data','Docker':'DevOps','AWS':'DevOps','CI/CD':'DevOps','Kubernetes':'DevOps','Terraform':'DevOps','MLOps':'DevOps','SIEM':'DevOps','Testing':'Testing','Threat Modeling':'Testing','Incident Response':'Testing','Cryptography':'Testing','Git':'Tooling','Linux':'Tooling','Networking':'Tooling' };
+const AXES = ['Frontend','Backend','Data','DevOps','Testing','Tooling'];
+
+const SEED = [
+  { name:'Python', level:'Intermediate', evidence:'Built a Flask REST API for a campus event tracker serving 3,000 students', where:'Projects · line 14', strength:'strong', recency:1 },
+  { name:'JavaScript', level:'Intermediate', evidence:'Wrote the event-tracker frontend in vanilla JS with a custom router', where:'Projects · line 16', strength:'strong', recency:1 },
+  { name:'REST APIs', level:'Intermediate', evidence:'Designed 14 endpoints with token auth and pagination', where:'Projects · line 15', strength:'strong', recency:1 },
+  { name:'SQL', level:'Intermediate', evidence:'Designed the PostgreSQL schema for an inventory system (9 tables)', where:'Experience · line 9', strength:'strong', recency:.95 },
+  { name:'Git', level:'Advanced', evidence:'Collaborated across a 4-person team; 40+ pull requests merged', where:'Experience · line 11', strength:'strong', recency:1 },
+  { name:'HTML/CSS', level:'Advanced', evidence:'Responsive UI for the college fest site, 12k visits in a week', where:'Projects · line 21', strength:'strong', recency:.9 },
+  { name:'Testing', level:'Beginner', evidence:'Wrote pytest unit tests covering the API auth layer', where:'Projects · line 17', strength:'strong', recency:.9 },
+  { name:'React', level:'Beginner', evidence:'Skills: React, Redux, Tailwind, Bootstrap', where:'Skills · line 28', strength:'weak', recency:.85 },
+  { name:'Node.js', level:'Beginner', evidence:'Skills: Node.js, Express, MongoDB', where:'Skills · line 28', strength:'weak', recency:.85 },
+  { name:'Docker', level:'Beginner', evidence:'Skills: Docker, Linux, Bash, Postman', where:'Skills · line 29', strength:'weak', recency:.85 },
+  { name:'AWS', level:'Beginner', evidence:'Skills: AWS (EC2, S3), Netlify, Vercel', where:'Skills · line 29', strength:'weak', recency:.8 },
+  { name:'Linux', level:'Intermediate', evidence:'Administered a Raspberry Pi lab server for the robotics club', where:'Activities · line 33', strength:'strong', recency:.9 }
+];
+
+const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+const PROF = { Beginner: .3, Intermediate: .6, Advanced: .85 };
+
+const CONTENT = {
+  'TypeScript': {
+    summary: 'TypeScript is not a new language to learn so much as a contract layer over the JavaScript you already write. The work is in modelling data honestly: discriminated unions instead of optional-everything objects, generics where a function is genuinely polymorphic, and strict mode from day one so the compiler is allowed to disagree with you.',
+    resources: [ ['TypeScript Handbook — Everyday Types & Narrowing','typescriptlang.org · free',45], ['Type-level thinking for JavaScript developers','Total TypeScript beginners tutorial · free',60], ['Adding TypeScript to an existing Express app','Fireship · video',22] ],
+    project: ['Port the event tracker to TypeScript', 'Convert your campus event-tracker frontend to TypeScript with strict mode on and zero `any`. Generate a typed API client from your Flask routes so a schema change breaks the build instead of production.'],
+    quiz: [
+      ['What does `strict: true` most directly buy you?', ['Faster compilation','Null and undefined become part of the type system','Automatic type generation from JSON'], 1],
+      ['You have a value that is either a success or an error response. The idiomatic model is:', ['An interface with every field optional','A discriminated union on a literal `status` field','A class hierarchy with a base Response'], 1],
+      ['`unknown` differs from `any` because:', ['`unknown` must be narrowed before use','`unknown` is faster at runtime','They are identical aliases'], 0],
+      ['A generic `<T extends { id: string }>` on a function signals:', ['The function works for any object carrying an id','The function returns a string','T must be a class'], 0],
+      ['Types are erased at compile time, so runtime input from `fetch` should be:', ['Cast with `as` and trusted','Validated with a schema parser at the boundary','Typed as `any` to avoid friction'], 1]
+    ]
+  },
+  'React': {
+    summary: 'You already listed React, but nothing in your portfolio backs it. This module trades the tutorial loop for one real conversion: component boundaries drawn around state ownership, effects used only for synchronising with things outside React, and a data layer that does not re-fetch on every keystroke.',
+    resources: [ ['react.dev — Thinking in React & You Might Not Need an Effect','react.dev · free',90], ['Component composition patterns','Kent C. Dodds blog · free',40], ['Building a real app with React Query','Codevolution · video series',75] ],
+    project: ['Rebuild the event-tracker UI in React', 'Replace your vanilla-JS frontend with React: a list view, a filter panel, an optimistic RSVP action, and a detail route. State lives at the lowest common owner; the RSVP rolls back on a failed request.'],
+    quiz: [
+      ['State that two sibling components both read should live:', ['Duplicated in both siblings','In their closest common parent','In a module-level variable'], 1],
+      ['Which of these is a legitimate use of `useEffect`?', ['Deriving a filtered list from props','Subscribing to a WebSocket','Computing a total from two state values'], 1],
+      ['A `key` on a list item exists so React can:', ['Sort the list','Match elements across renders to preserve state','Memoise the render function'], 1],
+      ['Your input lags on every keystroke because the whole page re-renders. First move:', ['Wrap everything in memo','Move the input state down into a smaller component','Switch to uncontrolled inputs'], 1],
+      ['Optimistic UI means:', ['Rendering the expected result before the server confirms, then reconciling','Retrying failed requests silently','Preloading the next route'], 0]
+    ]
+  },
+  'Node.js': {
+    summary: 'The Flask API proves you can design endpoints; this module is about doing it on the runtime the postings actually ask for. Express or Fastify, layered so routes stay thin, plus the things that separate a demo server from a deployed one: validation at the edge, structured logging, graceful shutdown.',
+    resources: [ ['Node.js official guide — async patterns and the event loop','nodejs.org · free',50], ['Express in production: structure, validation, errors','freeCodeCamp · free',70], ['Fastify quickstart with schema validation','fastify.dev · docs',35] ],
+    project: ['Re-implement your Flask API in Node', 'Port the fourteen event-tracker endpoints to Express with Zod validation, JWT auth middleware, and Postgres via a query builder. Keep the same OpenAPI contract so the React client is untouched.'],
+    quiz: [
+      ['Blocking the event loop with a synchronous hash of a 40MB file affects:', ['Only that request','Every concurrent request on that process','Nothing, Node forks per request'], 1],
+      ['Middleware order matters most for:', ['Static file caching','Auth running before the route handler','Response compression ratio'], 1],
+      ['Request-body validation belongs:', ['In the database constraints only','At the route boundary before business logic','In the client'], 1],
+      ['A 500 on an unhandled promise rejection is best prevented by:', ['try/catch plus a central error middleware','Restarting the process','Disabling async routes'], 0],
+      ['Connection pooling exists because:', ['Opening a Postgres connection per request is expensive','Postgres allows one connection','Pools encrypt traffic'], 0]
+    ]
+  },
+  'Docker': {
+    summary: 'Containers are the answer to "works on my machine", and every posting in your corpus that mentions deployment mentions them. The mental model is layers: a Dockerfile is a cache-friendly sequence, and most bad images are bad because the sequence is wrong, not because the base image is.',
+    resources: [ ['Docker Getting Started — images, layers, volumes','docs.docker.com · free',60], ['Dockerising a Python + Postgres app with Compose','TechWorld with Nana · video',55], ['Multi-stage builds and image slimming','docs.docker.com · free',25] ],
+    project: ['Containerise the event tracker', 'Write a multi-stage Dockerfile for the API and a Compose file bringing up API, Postgres and a seeded volume with one command. Target an image under 200MB and document the layer cache order.'],
+    quiz: [
+      ['`COPY package.json` before `COPY . .` exists to:', ['Reduce image size','Keep the dependency layer cached when only source changes','Enforce file ordering'], 1],
+      ['Data written inside a container without a volume is:', ['Persisted to the host automatically','Lost when the container is removed','Shared across containers'], 1],
+      ['A multi-stage build mainly reduces:', ['Build time','Final image size by discarding build tooling','Network egress'], 1],
+      ['In Compose, service-to-service networking uses:', ['localhost and published ports','The service name as a hostname','The container ID'], 1],
+      ['`CMD` versus `ENTRYPOINT`:', ['CMD supplies default arguments that can be overridden at run time','They are identical','ENTRYPOINT runs at build time'], 0]
+    ]
+  },
+  'AWS': {
+    summary: 'Cloud shows up in half your target postings, usually as a small, boring surface: run a container, put objects somewhere, hand out narrow permissions. Learn that surface properly rather than sampling forty services.',
+    resources: [ ['AWS Cloud Practitioner Essentials','AWS Skill Builder · free',180], ['Deploying a container to ECS Fargate','AWS docs tutorial · free',60], ['IAM policies from first principles','AWS docs · free',40] ],
+    project: ['Deploy the containerised API', 'Push your image to ECR, run it on ECS Fargate behind an ALB, store uploads in S3, and write an IAM policy that grants only the two actions the task actually needs.'],
+    quiz: [
+      ['An IAM policy should be scoped to:', ['The broadest set of actions for flexibility','The minimum actions and resources needed','Whatever the console suggests'], 1],
+      ['S3 is best described as:', ['A network file system','An object store addressed by key','A block device'], 1],
+      ['Fargate differs from EC2-backed ECS because:', ['You do not manage the underlying instances','It is always cheaper','It supports more regions'], 0],
+      ['A security group is:', ['A stateful virtual firewall on the resource','A billing construct','A user directory'], 0],
+      ['Secrets in a deployed container should come from:', ['A committed .env file','A secrets manager injected at run time','The Dockerfile'], 1]
+    ]
+  },
+  'CI/CD': {
+    summary: 'A pipeline is your test suite made non-optional. The pieces are small — a workflow file, a matrix, a cache, a deploy gate — and the value is entirely in the discipline of never merging a red branch.',
+    resources: [ ['GitHub Actions — workflows, jobs and caching','docs.github.com · free',50], ['Build a test-and-deploy pipeline end to end','GitHub Skills · free',60], ['Trunk-based development explained','Atlassian · free',20] ],
+    project: ['Ship a pipeline for the event tracker', 'On every pull request: lint, run pytest and the React tests, build the Docker image, and block the merge if any step fails. On merge to main, push the image and deploy.'],
+    quiz: [
+      ['A CI job should fail the build when:', ['Tests fail or coverage drops below the gate','The branch is out of date','A reviewer is unassigned'], 0],
+      ['Caching dependencies between runs mainly improves:', ['Correctness','Pipeline duration','Security'], 1],
+      ['Deployment credentials belong in:', ['The workflow file','Repository or environment secrets','A committed config'], 1],
+      ['A build matrix is for:', ['Running the same job across several versions or platforms','Parallel deployments to production','Splitting the repo'], 0],
+      ['Trunk-based development implies:', ['Long-lived feature branches','Small, frequent merges to main behind flags','No code review'], 1]
+    ]
+  },
+  'Testing': {
+    summary: 'You have pytest on the auth layer, which is more than most applicants. The gap is breadth and intent: knowing what a test is for, testing behaviour rather than implementation, and having enough integration coverage that a refactor is safe.',
+    resources: [ ['Testing Library guiding principles','testing-library.com · free',30], ['pytest fixtures and parametrisation in depth','realpython.com · free',45], ['The practical test pyramid','martinfowler.com · free',35] ],
+    project: ['Raise the tracker to a real suite', 'Cover the API with integration tests against a throwaway Postgres container, add component tests for the RSVP flow, and wire coverage reporting into the pipeline with a floor of 70%.'],
+    quiz: [
+      ['A test that breaks when you rename a private method is:', ['Testing implementation rather than behaviour','Well isolated','A good regression test'], 0],
+      ['Integration tests are worth their slowness because:', ['They exercise the seams between units','They replace unit tests','They run in parallel'], 0],
+      ['A fixture exists to:', ['Provide reusable, disposable test setup','Assert output','Mock the network only'], 0],
+      ['Mocking the database in every test risks:', ['Slower runs','Passing tests over broken SQL','Flaky assertions'], 1],
+      ['Coverage at 100% guarantees:', ['Correctness','That lines ran, not that behaviour is right','No regressions'], 1]
+    ]
+  },
+  'System Design': {
+    summary: 'The one interview round that will not be closed by another tutorial. It rewards a vocabulary and a habit: state the constraints, do the arithmetic out loud, pick the boring option, and name the failure mode you are accepting.',
+    resources: [ ['System Design Primer — core concepts','GitHub · free',120], ['Designing Data-Intensive Applications, ch. 1–5','book · library',240], ['Back-of-the-envelope estimation drills','ByteByteGo · free',40] ],
+    project: ['Write the design doc for your own tracker', 'One page: read/write ratio at 3k users, the caching layer you would add first, what breaks at 300k, and the two things you would monitor. Argue the trade-offs, do not list technologies.'],
+    quiz: [
+      ['A read-heavy endpoint at 100:1 read/write should first get:', ['A read replica or cache','Sharding','A queue'], 0],
+      ['A cache invalidation strategy is required because:', ['Caches are slower than databases','Stale data must eventually be corrected','Caches expire memory'], 1],
+      ['Adding a queue between API and worker mainly buys:', ['Lower latency for the caller and absorbed spikes','Stronger consistency','Simpler deployment'], 0],
+      ['Horizontal scaling assumes:', ['Requests can be served by any instance','A larger machine','A single writer'], 0],
+      ['The first thing to state in a design round is:', ['Your database choice','Constraints and rough numbers','The diagram'], 1]
+    ]
+  }
+};
+
+function fallbackContent(skill) {
+  return {
+    summary: skill + ' appears often enough in your target corpus to be worth a dedicated week. Work from the primary documentation, build one small artefact with it, and defend that artefact at the checkpoint.',
+    resources: [ ['Official documentation — core concepts of ' + skill, 'primary source · free', 60], [skill + ' in practice: a guided build', 'freeCodeCamp · free', 75], ['Common ' + skill + ' mistakes and how to avoid them', 'community write-up · free', 25] ],
+    project: ['A working artefact using ' + skill, 'Build something small but complete with ' + skill + ' and publish the repository with a README that explains the decisions you made.'],
+    quiz: [
+      ['What is the strongest evidence that you actually know ' + skill + '?', ['A certificate','A shipped project you can explain line by line','A skills-section mention'], 1],
+      ['When the documentation and a tutorial disagree, prefer:', ['The tutorial','The documentation for the version you are running','Whichever is shorter'], 1],
+      ['A good first artefact in ' + skill + ' is:', ['A complete clone of a large product','A small end-to-end slice','A configuration file'], 1],
+      ['You should move on from ' + skill + ' when:', ['You can rebuild the artefact without the tutorial','You finish the video series','A week has passed'], 0],
+      ['The interview question you should expect on ' + skill + ' is:', ['A definition','Why you chose it over the alternative','Its release history'], 1]
+    ]
+  };
+}
+
+const PORTFOLIO = [
+  { kicker: '4–6 weeks · flagship', title: 'Campus Event Tracker v2', brief: 'Rebuild your existing project as a typed full-stack app: React front end, Node API, Postgres, containerised and deployed behind a pipeline. Because the v1 exists, the README can show a real before/after — the single most persuasive artefact a student can carry into an interview.', stack: ['TypeScript','React','Node.js','Postgres','Docker','GitHub Actions'], closes: ['TypeScript','React','Node.js','Docker','CI/CD'], scope: '~40 hrs' },
+  { kicker: '3 weeks · infrastructure', title: 'Deploy-anywhere starter kit', brief: 'A reusable template repository: multi-stage Dockerfile, Compose for local development, Terraform-free ECS Fargate deploy, and a workflow that tests, builds and ships on merge. Other students will fork it, which is itself a signal.', stack: ['Docker','AWS','GitHub Actions','Bash'], closes: ['Docker','AWS','CI/CD'], scope: '~24 hrs' },
+  { kicker: '2 weeks · depth', title: 'Load-tested API with a design doc', brief: 'Take the tracker API, put it under k6, and write the one-page design document: read/write ratio, the cache you added, the failure mode you accepted. Pairs a measurable result with the vocabulary the design round asks for.', stack: ['Node.js','Postgres','k6','Redis'], closes: ['System Design','Testing','Node.js'], scope: '~18 hrs' }
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: 'landing', step: 0,
+    role: 'fullstack', timeline: 6, hours: 10,
+    uploading: false, stage: -1,
+    skills: SEED.map((s, i) => ({ ...s, id: 'sk' + i })),
+    modules: [], activeId: null,
+    resDone: {}, links: {}, linkDraft: {},
+    answers: {}, results: {},
+    changeLog: [], events: [], baseline: null,
+    iFilter: 'All'
+  };
+
+  // ── deterministic engine ────────────────────────────────────────────
+  profOf(skill) {
+    const s = this.state.skills.find(x => x.name === skill);
+    if (!s) return 0;
+    if (s.acquired) return .9;
+    if (s.strength === 'weak') return Math.min(PROF[s.level], .25);
+    return PROF[s.level];
+  }
+  recencyOf(skill) {
+    const s = this.state.skills.find(x => x.name === skill);
+    return s ? s.recency : .9;
+  }
+  gaps() {
+    return REQS[this.state.role].map(([name, demand]) => {
+      const prof = this.profOf(name);
+      const pre = PREREQ[name];
+      const ready = !pre || this.profOf(pre) >= .6 ? 1 : .6;
+      const score = demand * (1 - prof) * this.recencyOf(name) * ready;
+      return { name, demand, prof, ready, score, blockedBy: ready < 1 ? pre : null };
+    }).sort((a, b) => b.score - a.score);
+  }
+  axisValues(profFn) {
+    return AXES.map(ax => {
+      const names = REQS[this.state.role].filter(([n]) => AXIS[n] === ax).map(([n]) => n);
+      if (!names.length) return .35;
+      return names.reduce((t, n) => t + profFn(n), 0) / names.length;
+    });
+  }
+  targetValues() {
+    return AXES.map(ax => {
+      const ds = REQS[this.state.role].filter(([n]) => AXIS[n] === ax).map(([, d]) => d);
+      if (!ds.length) return .5;
+      return Math.min(1, ds.reduce((t, d) => t + d, 0) / ds.length + .18);
+    });
+  }
+  poly(vals, r) {
+    const R = r || 100;
+    return vals.map((v, i) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / vals.length;
+      return (150 + Math.cos(a) * R * Math.max(.06, v)).toFixed(1) + ',' + (140 + Math.sin(a) * R * Math.max(.06, v)).toFixed(1);
+    }).join(' ');
+  }
+  log(kind, detail) {
+    const d = new Date(2026, 7, 11 + this.state.events.length);
+    const t = d.toISOString().slice(0, 10) + ' ' + String(9 + (this.state.events.length % 9)).padStart(2, '0') + ':' + String((this.state.events.length * 17) % 60).padStart(2, '0');
+    this.setState(s => ({ events: s.events.concat([{ t, kind, detail }]) }));
+  }
+
+  makeModules() {
+    const n = { 3: 6, 6: 8, 12: 10 }[this.state.timeline];
+    const list = this.gaps().filter(g => g.score > .12).slice(0, n);
+    return list.map((g, i) => {
+      const c = CONTENT[g.name] || fallbackContent(g.name);
+      return { id: 'm' + i, skill: g.name, title: g.name === 'System Design' ? 'System design foundations' : g.name, kind: 'core', content: c, status: 'pending', prevIdx: i };
+    });
+  }
+  ordered() {
+    const gs = {}; this.gaps().forEach(g => { gs[g.name] = g.score; });
+    const done = this.state.modules.filter(m => m.status === 'done');
+    const pend = this.state.modules.filter(m => m.status !== 'done')
+      .sort((a, b) => (b.pin != null ? 99 - b.pin : (gs[b.skill] || 0)) - (a.pin != null ? 99 - a.pin : (gs[a.skill] || 0)));
+    return done.concat(pend);
+  }
+
+  // ── navigation ──────────────────────────────────────────────────────
+  go = (screen) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen }); };
+
+  runUpload = () => {
+    if (this.state.uploading) return;
+    this.setState({ uploading: true, stage: 0 });
+    [1, 2, 3].forEach((i) => setTimeout(() => this.setState({ stage: i }), i * 900));
+    setTimeout(() => {
+      this.log('resume_parsed', 'aarav_sharma_resume.pdf · 12 skills extracted, all cited');
+      this.setState({ screen: 'profile', uploading: false, stage: -1 });
+    }, 3900);
+  };
+
+  buildRoadmap = () => {
+    const mods = this.makeModules();
+    this.log('roadmap_built', mods.length + ' modules · ' + this.state.timeline + ' months · ' + this.state.hours + ' hrs/week');
+    this.setState({ modules: mods, screen: 'roadmap', changeLog: [], baseline: this.axisValues(n => this.profOf(n)) });
+  };
+
+  openModule = (id) => () => this.setState({ activeId: id, screen: 'module', changeLog: [] });
+
+  pick = (modId, qi, oi) => () => {
+    if (this.state.results[modId]) return;
+    this.setState(s => {
+      const a = { ...(s.answers[modId] || {}) }; a[qi] = oi;
+      return { answers: { ...s.answers, [modId]: a } };
+    });
+  };
+
+  submitQuiz = () => {
+    const m = this.state.modules.find(x => x.id === this.state.activeId);
+    if (!m) return;
+    const qs = m.content.quiz, a = this.state.answers[m.id] || {};
+    const correct = qs.reduce((t, q, i) => t + (a[i] === q[2] ? 1 : 0), 0);
+    const pct = Math.round((correct / qs.length) * 100);
+    const before = this.ordered().filter(x => x.status !== 'done' && x.skill !== m.skill).map(x => x.skill);
+    const log = [], changes = [];
+
+    this.setState(s => {
+      let skills = s.skills.slice();
+      let modules = s.modules.map(x => x.id === m.id ? { ...x } : x);
+      const idx = modules.findIndex(x => x.id === m.id);
+      const has = skills.findIndex(x => x.name === m.skill);
+
+      if (pct >= 80) {
+        if (has >= 0) skills[has] = { ...skills[has], acquired: true, level: 'Advanced', strength: 'strong', evidence: 'Checkpoint passed at ' + pct + '% + project submitted for ' + m.skill, where: 'SkillForge · verified' };
+        else skills.push({ id: 'sk-' + m.skill, name: m.skill, level: 'Advanced', strength: 'strong', acquired: true, recency: 1, evidence: 'Checkpoint passed at ' + pct + '% + project submitted for ' + m.skill, where: 'SkillForge · verified' });
+        modules[idx].status = 'done';
+        log.push(m.skill + ' marked acquired — proficiency 0.90, evidence strength strong.');
+        log.push('All ' + REQS[s.role].length + ' gap scores recomputed against the updated profile.');
+      } else if (pct >= 50) {
+        modules[idx].status = 'done';
+        modules.splice(idx + 1, 0, { id: m.id + '-r', skill: m.skill, title: 'Reinforcement — ' + m.skill, kind: 'reinforcement', content: m.content, status: 'pending', pin: 0, inserted: true });
+        if (has >= 0) skills[has] = { ...skills[has], level: 'Intermediate', strength: 'strong' };
+        log.push('Partial pass. ' + m.skill + ' held at intermediate — not marked acquired.');
+        log.push('Reinforcement module inserted directly after this week.');
+      } else {
+        const pre = PREREQ[m.skill] || 'Fundamentals';
+        if (has >= 0) skills[has] = { ...skills[has], level: 'Beginner', strength: 'weak' };
+        modules.splice(idx, 0, { id: m.id + '-p', skill: pre, title: 'Prerequisite — ' + pre, kind: 'prerequisite', content: CONTENT[pre] || fallbackContent(pre), status: 'pending', pin: 0, inserted: true });
+        log.push(m.skill + ' proficiency demoted — evidence strength dropped to weak.');
+        log.push('Prerequisite module (' + pre + ') pushed ahead of it.');
+      }
+      return { skills, modules, results: { ...s.results, [m.id]: { pct, log } } };
+    });
+
+    setTimeout(() => {
+      const after = this.ordered().filter(x => x.status !== 'done').map(x => x.skill);
+      after.forEach((sk, i) => {
+        const was = before.indexOf(sk);
+        if (was < 0) changes.push('· ' + sk + ' inserted at week ' + (i + 1 + this.state.modules.filter(x => x.status === 'done').length));
+        else if (was > i) changes.push('· ' + sk + ' moved up ' + (was - i) + ' ' + (was - i === 1 ? 'place' : 'places') + (PREREQ[sk] === m.skill ? ' — prerequisite now met' : ''));
+        else if (was < i) changes.push('· ' + sk + ' moved down ' + (i - was) + ' ' + (i - was === 1 ? 'place' : 'places'));
+      });
+      this.setState({ changeLog: changes.slice(0, 5), moves: after.map((sk, i) => [sk, before.indexOf(sk) - i]) });
+      this.log('quiz_scored', m.skill + ' checkpoint · ' + pct + '% · ' + (pct >= 80 ? 'acquired' : pct >= 50 ? 'reinforcement queued' : 'demoted'));
+    }, 0);
+  };
+
+  submitLink = () => {
+    const id = this.state.activeId, url = (this.state.linkDraft[id] || '').trim();
+    if (!url) return;
+    this.setState(s => ({ links: { ...s.links, [id]: url } }));
+    this.log('project_submitted', url);
+  };
+
+  // ── view ────────────────────────────────────────────────────────────
+  renderVals() {
+    const S = this.state, sc = S.screen;
+    const role = ROLES.find(r => r.id === S.role);
+    const gaps = this.gaps();
+    const acc = 'var(--color-accent)';
+    const btnBase = 'display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);cursor:pointer;background:transparent;font-family:var(--font-body);color:var(--color-text);transition:border-color .15s,background .15s;';
+    const sel = (on) => btnBase + (on ? 'border:1px solid ' + acc + ';box-shadow:inset 0 0 0 1px ' + acc + ';background:color-mix(in srgb, var(--color-accent) 7%, transparent);' : 'border:1px solid var(--color-divider);');
+
+    const v = {
+      isLanding: sc === 'landing', isOnboarding: sc === 'onboarding', isUpload: sc === 'upload',
+      isProfile: sc === 'profile', isGaps: sc === 'gaps', isRoadmap: sc === 'roadmap',
+      isModule: sc === 'module', isProjects: sc === 'projects', isInterview: sc === 'interview', isAnalytics: sc === 'analytics',
+      navReady: sc !== 'landing' && sc !== 'onboarding' && sc !== 'upload',
+      navIdle: sc === 'landing' || sc === 'onboarding' || sc === 'upload',
+      start: this.go('onboarding'), toRoadmap: this.go('roadmap'), toGaps: this.go('gaps'),
+      buildRoadmap: this.buildRoadmap, runUpload: this.runUpload,
+      landingPoints: [
+        { n: '12', title: 'Skills, each with a citation', body: 'Extraction refuses to emit a skill it cannot quote from your resume. No citation, no card.' },
+        { n: '1,240', title: 'Job descriptions diffed', body: 'Demand frequency is counted across the real posting corpus for your role, not assumed.' },
+        { n: '80%', title: 'The threshold that moves things', body: 'Pass a checkpoint and the gap scores are recomputed on the spot. The roadmap reorders in front of you.' }
+      ]
+    };
+
+    v.navItems = [['Profile','profile'],['Gaps','gaps'],['Roadmap','roadmap'],['Projects','projects'],['Interview','interview'],['Analytics','analytics']]
+      .map(([label, key]) => ({ label, cur: sc === key || (key === 'roadmap' && sc === 'module') ? 'page' : null, go: this.go(key) }));
+
+    // onboarding
+    v.steps = ['Target role', 'Timeline', 'Weekly hours'].map((label, i) => ({
+      n: i + 1, label,
+      dot: 'width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums;border:1px solid ' + (i <= S.step ? acc : 'var(--color-divider)') + ';color:' + (i <= S.step ? acc : 'var(--color-neutral-600)'),
+      txt: 'font-size:12.5px;letter-spacing:.04em;white-space:nowrap;color:' + (i === S.step ? 'var(--color-text)' : 'var(--color-neutral-600)') + ';margin-right:var(--space-3)'
+    }));
+    v.onStep1 = S.step === 0; v.onStep2 = S.step === 1; v.onStep3 = S.step === 2;
+    v.roleOptions = ROLES.map(r => ({ name: r.name, meta: r.posts.toLocaleString() + ' postings indexed', style: sel(S.role === r.id), pick: () => this.setState({ role: r.id }) }));
+    v.timelineOptions = [3, 6, 12].map(n => ({ n, style: sel(S.timeline === n) + 'align-items:center;min-width:104px;', pick: () => this.setState({ timeline: n }) }));
+    v.hourOptions = [5, 10, 20].map(n => ({ n, style: sel(S.hours === n) + 'align-items:center;min-width:104px;', pick: () => this.setState({ hours: n }) }));
+    v.nextLabel = S.step < 2 ? 'Continue →' : 'Upload resume →';
+    v.next = () => S.step < 2 ? this.setState({ step: S.step + 1 }) : this.setState({ screen: 'upload' });
+    v.back = () => S.step > 0 ? this.setState({ step: S.step - 1 }) : this.setState({ screen: 'landing' });
+
+    // upload
+    v.dropStyle = 'margin-top:var(--space-6);border:1px dashed ' + (S.uploading ? acc : 'var(--color-neutral-400)') + ';border-radius:var(--radius-md);padding:56px var(--space-6);text-align:center;cursor:' + (S.uploading ? 'progress' : 'pointer') + ';background:' + (S.uploading ? 'color-mix(in srgb, var(--color-accent) 5%, transparent)' : 'transparent');
+    v.dropTitle = S.uploading ? 'aarav_sharma_resume.pdf' : 'Drop your PDF here';
+    v.dropSub = S.uploading ? 'sha256 · 4f2c…9be1 · 2 pages · 3,914 characters extracted' : 'or click to use the sample resume · 214 KB';
+    v.stages = ['Parsing PDF', 'Extracting skills', 'Matching market data', 'Building roadmap'].map((name, i) => {
+      const done = S.stage > i, live = S.stage === i;
+      return { name, glyph: done ? '✓' : live ? '·' : '', note: done ? 'done' : live ? 'running' : 'queued',
+        mark: 'width:20px;height:20px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;border:1px solid ' + (done || live ? acc : 'var(--color-divider)') + ';color:' + acc + (live ? ';animation:sf-pulse 1s ease infinite' : ''),
+        label: 'font-size:14px;white-space:nowrap;color:' + (done || live ? 'var(--color-text)' : 'var(--color-neutral-600)') };
+    });
+
+    // profile
+    const weak = S.skills.filter(s => s.strength === 'weak').length;
+    v.profileLine = S.skills.length + ' skills extracted, every one quoting the line it came from. ' + weak + ' rest on a bare skills-list mention — those are flagged weak evidence, not counted as coverage. Correct or delete anything wrong before the diff runs.';
+    v.skillCards = S.skills.map(s => ({
+      name: s.name, level: s.level, evidence: s.evidence, source: s.where,
+      strengthLabel: s.acquired ? 'verified' : s.strength === 'weak' ? 'weak evidence' : 'strong evidence',
+      tagCls: s.strength === 'weak' ? 'tag tag-neutral' : 'tag tag-accent',
+      cycle: () => this.setState(st => ({ skills: st.skills.map(x => x.id === s.id ? { ...x, level: LEVELS[(LEVELS.indexOf(x.level) + 1) % 3] } : x) })),
+      remove: () => this.setState(st => ({ skills: st.skills.filter(x => x.id !== s.id) }))
+    }));
+
+    // gaps
+    const youVals = this.axisValues(n => this.profOf(n));
+    v.radarYou = this.poly(youVals);
+    v.radarTarget = this.poly(this.targetValues());
+    v.radarBaseline = this.poly(S.baseline || youVals);
+    v.radarRings = [.25, .5, .75, 1].map(f => ({ pts: this.poly(AXES.map(() => f)) }));
+    v.radarSpokes = AXES.map((_, i) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length;
+      return { x: (150 + Math.cos(a) * 100).toFixed(1), y: (140 + Math.sin(a) * 100).toFixed(1) };
+    });
+    v.radarLabels = AXES.map((name, i) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length;
+      const x = 150 + Math.cos(a) * 124, y = 140 + Math.sin(a) * 124 + 4;
+      return { name, x: x.toFixed(0), y: y.toFixed(0), anchor: Math.abs(Math.cos(a)) < .2 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') };
+    });
+    const bar = (pct, color) => 'display:block;height:100%;width:' + Math.round(pct * 100) + '%;background:' + color;
+    const strongL = gaps.filter(g => this.profOf(g.name) >= .5).map(g => ({ name: g.name, demand: g.demand.toFixed(2), note: 'proficiency ' + this.profOf(g.name).toFixed(2), bar: bar(g.demand, acc) }));
+    const weakL = gaps.filter(g => { const s = S.skills.find(x => x.name === g.name); return s && s.strength === 'weak'; })
+      .map(g => ({ name: g.name, demand: g.demand.toFixed(2), note: 'listed, no project', bar: bar(g.demand, 'var(--color-neutral-500)') }));
+    const critL = gaps.filter(g => !S.skills.find(x => x.name === g.name)).map(g => ({ name: g.name, demand: g.demand.toFixed(2), note: g.blockedBy ? 'needs ' + g.blockedBy + ' first' : 'no evidence at all', bar: bar(g.demand, 'var(--color-accent-700)') }));
+    v.buckets = [
+      { title: 'Critical gaps', color: 'var(--color-accent-700)', count: critL.length + ' skills', rule: 'market wants it · you have nothing', items: critL },
+      { title: 'Weak evidence', color: 'var(--color-neutral-700)', count: weakL.length + ' skills', rule: 'listed in Skills · no project backs it', items: weakL },
+      { title: 'Strong', color: acc, count: strongL.length + ' skills', rule: 'you have it · market wants it', items: strongL }
+    ];
+    v.gapLine = role.name + ' · ' + REQS[S.role].length + ' required skills diffed against ' + role.posts.toLocaleString() + ' postings. gap_score = demand_frequency × (1 − proficiency) × recency × prerequisite readiness.';
+
+    // roadmap
+    const ord = this.ordered();
+    const moveMap = {}; (S.moves || []).forEach(([sk, d]) => { moveMap[sk] = d; });
+    const doneCount = ord.filter(m => m.status === 'done').length;
+    const gsMap = {}; gaps.forEach(g => { gsMap[g.name] = g; });
+    v.roadmapLine = role.name + ' · ' + S.timeline + ' months · ' + S.hours + ' hrs per week · ' + doneCount + ' of ' + ord.length + ' modules complete';
+    v.hasChangeLog = S.changeLog.length > 0; v.changeLog = S.changeLog;
+    v.moduleRows = ord.map((m, i) => {
+      const g = gsMap[m.skill], done = m.status === 'done';
+      const mv = m.status !== 'done' ? moveMap[m.skill] : 0;
+      return {
+        week: i + 1, weekColor: done ? 'var(--color-neutral-500)' : acc,
+        title: m.title, summary: m.content.summary.split('. ')[0] + '.',
+        tag: done ? 'complete' : m.kind === 'reinforcement' ? 'reinforcement' : m.kind === 'prerequisite' ? 'prerequisite' : g && g.blockedBy ? 'blocked · ' + g.blockedBy : 'core',
+        tagCls: done ? 'tag tag-neutral' : m.kind === 'core' ? 'tag tag-accent' : 'tag tag-outline',
+        move: mv > 0 ? '↑ moved up ' + mv : m.inserted ? '＋ inserted' : '',
+        moveStyle: 'font-size:11px;color:' + acc + ';letter-spacing:.04em;' + (mv > 0 || m.inserted ? '' : 'display:none'),
+        demand: g ? g.demand.toFixed(2) : '—',
+        score: done ? '0.00 · closed' : g ? g.score.toFixed(2) : '—',
+        load: S.hours + ' hrs · ' + m.content.resources.length + ' resources · 1 mini-project · 5 questions',
+        cta: done ? 'Review' : 'Open',
+        open: this.openModule(m.id),
+        row: 'display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-2);border-bottom:1px solid var(--color-divider);' + (done ? 'opacity:.6;' : '') + (mv > 0 || m.inserted ? 'background:color-mix(in srgb, var(--color-accent) 6%, transparent);' : '')
+      };
+    });
+
+    // module detail
+    const m = S.modules.find(x => x.id === S.activeId);
+    if (m) {
+      const idx = ord.findIndex(x => x.id === m.id);
+      const done = S.resDone[m.id] || {};
+      const res = m.content.resources.map((r, i) => ({
+        name: r[0], meta: r[1] + ' · ' + r[2] + ' min', check: done[i] ? '✓' : '',
+        row: 'display:flex;gap:var(--space-3);align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--color-divider);cursor:pointer',
+        box: 'width:18px;height:18px;flex:none;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px;border:1px solid ' + (done[i] ? acc : 'var(--color-divider)') + ';color:' + acc,
+        title: 'font-size:13.5px;line-height:1.45;' + (done[i] ? 'text-decoration:line-through;opacity:.55' : ''),
+        toggle: () => this.setState(s => ({ resDone: { ...s.resDone, [m.id]: { ...(s.resDone[m.id] || {}), [i]: !(s.resDone[m.id] || {})[i] } } }))
+      }));
+      const ans = S.answers[m.id] || {}, result = S.results[m.id];
+      v.mod = {
+        week: idx + 1, title: m.title, summary: m.content.summary,
+        why: 'Placed here because demand is ' + ((gsMap[m.skill] && gsMap[m.skill].demand) || 0).toFixed(2) + ' across ' + role.posts.toLocaleString() + ' postings and your evidence for it is ' + (this.profOf(m.skill) < .3 ? 'absent or weak' : 'partial') + '.',
+        resources: res,
+        projectKicker: 'Mini-project · ' + (S.hours >= 20 ? '8–10 hrs' : S.hours >= 10 ? '4–6 hrs' : '2–3 hrs'),
+        projectTitle: m.content.project[0], projectBrief: m.content.project[1]
+      };
+      v.linkValue = S.links[m.id] || S.linkDraft[m.id] || '';
+      v.onLinkChange = (e) => this.setState(s => ({ linkDraft: { ...s.linkDraft, [m.id]: e.target.value } }));
+      v.submitLink = this.submitLink;
+      v.linkCta = S.links[m.id] ? 'Resubmit' : 'Submit';
+      v.linkDone = !!S.links[m.id];
+      v.quiz = m.content.quiz.map((q, qi) => ({
+        n: qi + 1, text: q[0],
+        options: q[1].map((label, oi) => {
+          const picked = ans[qi] === oi;
+          const right = result && oi === q[2], wrong = result && picked && oi !== q[2];
+          const border = right ? acc : wrong ? 'var(--color-neutral-700)' : picked ? acc : 'var(--color-divider)';
+          return { label: (right ? '✓ ' : wrong ? '✗ ' : '') + label, pick: this.pick(m.id, qi, oi),
+            style: 'text-align:left;font-family:var(--font-body);font-size:13px;line-height:1.45;padding:8px 11px;border-radius:var(--radius-md);cursor:' + (result ? 'default' : 'pointer') + ';color:var(--color-text);background:' + (picked && !result ? 'color-mix(in srgb, var(--color-accent) 8%, transparent)' : right ? 'color-mix(in srgb, var(--color-accent) 10%, transparent)' : 'transparent') + ';border:1px solid ' + border };
+        })
+      }));
+      v.quizMeta = Object.keys(ans).length + ' of ' + m.content.quiz.length + ' answered';
+      v.quizOpen = !result; v.quizScored = !!result;
+      v.quizIncomplete = Object.keys(ans).length < m.content.quiz.length;
+      v.quizCta = v.quizIncomplete ? 'Answer all ' + m.content.quiz.length + ' to submit' : 'Submit checkpoint';
+      v.submitQuiz = this.submitQuiz;
+      if (result) {
+        v.resultPct = result.pct + '%';
+        v.resultVerdict = result.pct >= 80 ? 'Passed — skill acquired' : result.pct >= 50 ? 'Partial — reinforcement queued' : 'Below threshold — prerequisite inserted';
+        v.resultLog = result.log.concat(['Roadmap re-sorted; ' + S.events.length + ' rows written to progress_events.']);
+      }
+    }
+
+    // projects
+    const openGaps = gaps.filter(g => g.score > .12).map(g => g.name);
+    v.portfolio = PORTFOLIO.map(p => ({ ...p, coverage: p.closes.filter(c => openGaps.includes(c)).length + '/' + p.closes.length }));
+
+    // interview
+    const acquired = S.skills.filter(s => s.acquired).map(s => s.name);
+    const claimed = S.skills.filter(s => !s.acquired && s.strength === 'strong').slice(0, 5);
+    const repoQs = Object.keys(S.links).map(id => {
+      const mod = S.modules.find(x => x.id === id) || {};
+      const url = S.links[id], repo = url.split('/').filter(Boolean).pop();
+      return { text: 'You built ' + repo + ' — why ' + (mod.skill || 'that stack') + ' rather than the option you already knew?', hint: 'Name the constraint that decided it, not the feature list. Interviewers are testing whether the choice was made or inherited.', tag: 'from your repo', tagCls: 'tag tag-outline', source: url.replace('https://', '') };
+    });
+    const techQs = claimed.map(s => ({
+      text: s.name === 'SQL' ? 'Your inventory schema had nine tables — walk me through the one join you would denormalise first, and why.'
+        : s.name === 'Python' ? 'The event API served 3,000 students. Where would it fall over at 30,000, and what would you change first?'
+        : s.name === 'REST APIs' ? 'You shipped fourteen endpoints with token auth. How do you handle token expiry mid-session?'
+        : s.name === 'Git' ? 'Forty merged pull requests — describe a merge conflict you resolved badly and what you do differently now.'
+        : 'Talk me through a decision you made while working with ' + s.name + ' that you would reverse today.',
+      hint: 'Grounded in your own resume line: “' + s.evidence.slice(0, 68) + '…”', tag: 'your claim', tagCls: 'tag tag-accent', source: s.where
+    }));
+    const gapQs = acquired.map(n => ({ text: 'You have just picked up ' + n + '. What does it let you do that you could not do a month ago?', hint: 'Answer with the artefact, then the concept. The checkpoint you passed is the evidence.', tag: 'gap closed', tagCls: 'tag tag-accent', source: 'verified by SkillForge' }));
+    const all = repoQs.concat(gapQs, techQs);
+    const filters = ['All', 'Your claims', 'Gaps closed', 'From your repos'];
+    v.interviewFilters = filters.map(label => ({ label, pick: () => this.setState({ iFilter: label }),
+      style: 'font-family:var(--font-body);font-size:12.5px;padding:6px 14px;border-radius:var(--radius-md);cursor:pointer;background:transparent;color:' + (S.iFilter === label ? acc : 'var(--color-text)') + ';border:1px solid ' + (S.iFilter === label ? acc : 'var(--color-divider)') }));
+    const fmap = { 'Your claims': 'your claim', 'Gaps closed': 'gap closed', 'From your repos': 'from your repo' };
+    v.questions = S.iFilter === 'All' ? all : all.filter(q => q.tag === fmap[S.iFilter]);
+    v.noQuestions = v.questions.length === 0;
+
+    // analytics
+    const doneMods = S.modules.filter(x => x.status === 'done').length;
+    const coverageNow = Math.round((youVals.reduce((t, x) => t + x, 0) / youVals.length) * 100);
+    const baseCoverage = S.baseline ? Math.round((S.baseline.reduce((t, x) => t + x, 0) / S.baseline.length) * 100) : coverageNow;
+    const quizzes = Object.keys(S.results).map(k => S.results[k].pct);
+    const avgQuiz = quizzes.length ? Math.round(quizzes.reduce((t, x) => t + x, 0) / quizzes.length) : 0;
+    const remaining = Math.max(0, S.modules.length - doneMods);
+    const ready = new Date(2026, 7, 11 + remaining * 7);
+    v.stats = [
+      { label: 'Skill coverage', value: coverageNow + '%', note: (coverageNow - baseCoverage >= 0 ? '+' : '') + (coverageNow - baseCoverage) + ' pts since upload' },
+      { label: 'Modules complete', value: doneMods + '/' + (S.modules.length || 0), note: remaining + ' weeks of work remaining' },
+      { label: 'Quiz accuracy', value: quizzes.length ? avgQuiz + '%' : '—', note: quizzes.length + ' checkpoints taken' },
+      { label: 'Projected ready', value: ready.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }), note: 'at ' + S.hours + ' hrs per week' }
+    ];
+    const series = [baseCoverage].concat(quizzes.map((_, i) => baseCoverage + Math.round(((coverageNow - baseCoverage) * (i + 1)) / Math.max(1, quizzes.length))));
+    const pts = series.length > 1 ? series : [baseCoverage, baseCoverage];
+    const xAt = (i) => 34 + (i * (416 / Math.max(1, pts.length - 1)));
+    const yAt = (p) => 170 - (p / 100) * 150;
+    v.coveragePath = pts.map((p, i) => (i ? 'L' : 'M') + xAt(i).toFixed(1) + ' ' + yAt(p).toFixed(1)).join(' ');
+    v.coverageDots = pts.map((p, i) => ({ x: xAt(i).toFixed(1), y: yAt(p).toFixed(1) }));
+    v.coverageTicks = pts.map((p, i) => ({ x: xAt(i).toFixed(1), label: i === 0 ? 'upload' : 'wk ' + i }));
+    v.chartGrid = [0, 25, 50, 75, 100].map(p => ({ y: yAt(p).toFixed(1), ty: (yAt(p) + 3).toFixed(1), label: p + '%' }));
+    v.streakCells = Array.from({ length: 28 }, (_, i) => {
+      const active = i < 14 + doneMods * 3 && (i % 7 !== 6);
+      return { style: 'width:16px;height:16px;border-radius:var(--radius-sm);display:inline-block;background:' + (active ? 'color-mix(in srgb, var(--color-accent) ' + (30 + (i % 4) * 20) + '%, transparent)' : 'var(--color-neutral-200)') };
+    });
+    v.streakNote = 'Current streak ' + (12 + doneMods * 3) + ' days · longest ' + (14 + doneMods * 3) + ' days · last four weeks';
+    v.eventLine = S.events.length + ' rows written this session.';
+    v.eventRows = S.events.slice().reverse();
+
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>

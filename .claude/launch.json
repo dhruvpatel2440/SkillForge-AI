@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "SkillForge Backend",
+      "runtimeExecutable": "C:\\Users\\Dhruv\\Downloads\\Clarifying project format\\backend\\venv\\Scripts\\uvicorn.exe",
+      "runtimeArgs": ["app.main:app", "--reload", "--port", "8000"],
+      "port": 8000,
+      "cwd": "C:\\Users\\Dhruv\\Downloads\\Clarifying project format\\backend"
+    },
+    {
+      "name": "SkillForge Frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173,
+      "cwd": "C:\\Users\\Dhruv\\Downloads\\Clarifying project format\\frontend"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(python -c \"import sys; print\\(sys.executable\\)\")",
+      "Bash(python -c \"import socket; socket.getaddrinfo\\('db.rcwsrpynoaszddpxbusw.supabase.co', 5432\\)\")",
+      "Bash(python -c \"import socket; socket.getaddrinfo\\('rcwsrpynoaszddpxbusw.supabase.co', 443\\)\")",
+      "Bash(python -c \"import socket; result = socket.getaddrinfo\\('aws-0-ap-south-1.pooler.supabase.com', 5432\\); print\\('RESOLVED:', result[0][4]\\)\")"
+    ]
+  }
+}
