@@ -57,12 +57,26 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    """Catch truly unhandled exceptions — never called for HTTPException."""
+    """Catch truly unhandled exceptions — never called for HTTPException.
+
+    Starlette routes a handler registered for the base `Exception` class through
+    ServerErrorMiddleware, which sits OUTSIDE CORSMiddleware in the stack. That
+    means responses from here never pass back through CORSMiddleware, so its
+    Access-Control-Allow-Origin header injection is skipped — the browser then
+    sees this as an opaque network/CORS failure, no matter what the body says.
+    We add the same headers by hand so real errors are still visible client-side.
+    """
     logger.error(f"Unhandled error: {exc}", exc_info=True)
-    return JSONResponse(
+    response = JSONResponse(
         status_code=500,
         content={"detail": "An internal server error occurred. Please try again."},
     )
+    origin = request.headers.get("origin")
+    if origin and origin in settings.cors_origins_list:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Vary"] = "Origin"
+    return response
 
 
 @app.get("/health")
