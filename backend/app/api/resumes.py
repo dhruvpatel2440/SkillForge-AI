@@ -1,8 +1,5 @@
 import os
-import uuid
 import logging
-import aiofiles
-from pathlib import Path
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
@@ -23,6 +20,7 @@ from app.models.certification import Certification
 from app.models.gap_analysis import GapAnalysis
 from app.models.roadmap import Roadmap, RoadmapWeek, RoadmapTask
 from app.services.resume_parser import calculate_hash, extract_text
+from app.services.storage import save_resume_file
 from app.services.markdown_converter import convert_to_markdown
 from app.services.resume_analyzer import analyze_resume
 from app.services.gap_engine import generate_gap_analysis
@@ -301,16 +299,12 @@ async def upload_resume(
     if existing and existing.processing_status == "completed":
         return ok(data={"resume_id": existing.id, "cached": True}, message="Resume already processed.")
 
-    upload_dir = Path(settings.upload_dir) / user_id
-    upload_dir.mkdir(parents=True, exist_ok=True)
-    file_path = upload_dir / f"{uuid.uuid4()}.pdf"
-    async with aiofiles.open(file_path, "wb") as f:
-        await f.write(content)
+    file_path = await save_resume_file(user_id, content)
 
     resume = Resume(
         user_id=user_id,
         file_name=file.filename,
-        file_path=str(file_path),
+        file_path=file_path,
         file_hash=file_hash,
         extracted_text=extracted,
         markdown_content=markdown,

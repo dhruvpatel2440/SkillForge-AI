@@ -29,7 +29,10 @@
       "PowerShell(taskkill /F /PID 28292 2>&1)",
       "PowerShell($h = @{ \"X-Admin-Key\" = \"SkillForge@Admin2024\" }; Write-Output \"=== GET /api/admin/ai-config ===\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:8000/api/admin/ai-config\" -Headers $h -TimeoutSec 15; \\($r.Content | ConvertFrom-Json\\).data | ConvertTo-Json -Depth 5 } catch { Write-Output \"ERR: $\\($_.Exception.Message\\)\"; if \\($_.Exception.Response\\) { $s=$_.Exception.Response.GetResponseStream\\(\\); \\(New-Object System.IO.StreamReader\\($s\\)\\).ReadToEnd\\(\\) } })",
       "PowerShell($pids = \\(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue\\).OwningProcess | Sort-Object -Unique; foreach \\($p in $pids\\) { try { Stop-Process -Id $p -Force -ErrorAction Stop } catch {} }; Start-Sleep 3; $o=\"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_out.log\"; $e=\"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_err.log\"; Remove-Item $o,$e -ErrorAction SilentlyContinue; cd \"C:\\\\Users\\\\Dhruv\\\\Downloads\\\\Clarifying project format\\\\backend\"; Start-Process -FilePath \".\\\\venv\\\\Scripts\\\\uvicorn.exe\" -ArgumentList \"app.main:app\",\"--host\",\"0.0.0.0\",\"--port\",\"8000\" -RedirectStandardOutput $o -RedirectStandardError $e -WindowStyle Hidden; Start-Sleep 12; Get-Content $o,$e -ErrorAction SilentlyContinue | Select-Object -Last 6)",
-      "Bash(grep -E \"\\\\.env$\")"
+      "Bash(grep -E \"\\\\.env$\")",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git push *)"
     ]
   }
 }

@@ -28,7 +28,8 @@ class Settings(BaseSettings):
 
     # File storage
     max_resume_size_mb: int = 10
-    upload_dir: str = "./uploads"
+    upload_dir: str = "./uploads"  # fallback used only if Supabase Storage is unreachable
+    supabase_storage_bucket: str = "resumes"
 
     # CORS
     cors_origins: str = "http://localhost:5173"
