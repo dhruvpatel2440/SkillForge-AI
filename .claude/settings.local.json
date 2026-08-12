@@ -5,7 +5,31 @@
       "PowerShell(python -c \"import sys; print\\(sys.executable\\)\")",
       "Bash(python -c \"import socket; socket.getaddrinfo\\('db.rcwsrpynoaszddpxbusw.supabase.co', 5432\\)\")",
       "Bash(python -c \"import socket; socket.getaddrinfo\\('rcwsrpynoaszddpxbusw.supabase.co', 443\\)\")",
-      "Bash(python -c \"import socket; result = socket.getaddrinfo\\('aws-0-ap-south-1.pooler.supabase.com', 5432\\); print\\('RESOLVED:', result[0][4]\\)\")"
+      "Bash(python -c \"import socket; result = socket.getaddrinfo\\('aws-0-ap-south-1.pooler.supabase.com', 5432\\); print\\('RESOLVED:', result[0][4]\\)\")",
+      "Bash(curl -s http://localhost:8000/api/admin/login -X POST -H \"Content-Type: application/json\" -d '{\"password\":\"SkillForge@Admin2024\"}')",
+      "Bash(curl -s \"http://localhost:8000/api/admin/ai-usage/live?minutes=60\" -H \"X-Admin-Key: SkillForge@Admin2024\")",
+      "Bash(curl -s \"http://localhost:8000/api/admin/dashboard\" -H \"X-Admin-Key: SkillForge@Admin2024\")",
+      "Bash(curl -s http://localhost:8000/api/admin/dashboard -H \"X-Admin-Key: SkillForge@Admin2024\")",
+      "Bash(curl -s \"http://localhost:8000/api/admin/ai-usage/timeline?days=30\" -H \"X-Admin-Key: SkillForge@Admin2024\")",
+      "Bash(curl -s \"http://localhost:8000/api/admin/ai-usage/timeline?days=30\" -H \"X-Admin-Key: SkillForge@Admin2024\" -v)",
+      "Bash(python -c ' *)",
+      "Bash(venvScriptspython.exe -c ' *)",
+      "Bash(python -c \"from app.core.config import get_settings; s = get_settings\\(\\); print\\('provider:', s.ai_provider\\); print\\('model:', s.openai_model\\); print\\('base_url:', s.openai_base_url\\); print\\('high_effort:', s.openai_high_effort\\); print\\('key set:', bool\\(s.effective_openai_key\\)\\)\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"from app.core.config import get_settings; s = get_settings\\(\\); print\\('provider:', s.ai_provider\\); print\\('model:', s.openai_model\\); print\\('base_url:', s.openai_base_url\\); print\\('high_effort:', s.openai_high_effort\\); print\\('key_set:', bool\\(s.effective_openai_key\\)\\)\")",
+      "Bash(\"venv/Scripts/uvicorn.exe\" app.main:app --reload --port 8000)",
+      "Bash(curl -s http://localhost:8000/health)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep 1; $outLog = \"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_out.log\"; $errLog = \"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_err.log\"; Remove-Item $outLog,$errLog -ErrorAction SilentlyContinue; cd \"C:\\\\Users\\\\Dhruv\\\\Downloads\\\\Clarifying project format\\\\backend\"; Start-Process -FilePath \".\\\\venv\\\\Scripts\\\\uvicorn.exe\" -ArgumentList \"app.main:app\",\"--host\",\"0.0.0.0\",\"--port\",\"8000\",\"--log-level\",\"debug\" -RedirectStandardOutput $outLog -RedirectStandardError $errLog -WindowStyle Hidden; Start-Sleep 4; Get-Content $outLog,$errLog -ErrorAction SilentlyContinue | Select-Object -Last 15)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep 2; $outLog = \"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_out.log\"; $errLog = \"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_err.log\"; Remove-Item $outLog,$errLog -ErrorAction SilentlyContinue; cd \"C:\\\\Users\\\\Dhruv\\\\Downloads\\\\Clarifying project format\\\\backend\"; Start-Process -FilePath \".\\\\venv\\\\Scripts\\\\uvicorn.exe\" -ArgumentList \"app.main:app\",\"--host\",\"0.0.0.0\",\"--port\",\"8000\" -RedirectStandardOutput $outLog -RedirectStandardError $errLog -WindowStyle Hidden; Start-Sleep 5; Get-Content $outLog,$errLog -ErrorAction SilentlyContinue | Select-Object -Last 8)",
+      "PowerShell(Stop-Process -Id 28292,11576 -Force -ErrorAction SilentlyContinue; Start-Sleep 2; $check = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue; if \\($check\\) { \"STILL RUNNING: $\\($check.OwningProcess\\)\" } else { \"All clear\" })",
+      "PowerShell($proc = Get-Process -Id 28292 -ErrorAction SilentlyContinue; if \\($proc\\) { \"Name: $\\($proc.Name\\) Path: $\\($proc.Path\\)\" }; taskkill /F /PID 28292; Start-Sleep 2; Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | Select-Object OwningProcess)",
+      "PowerShell($pids = \\(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue\\).OwningProcess | Sort-Object -Unique; foreach \\($p in $pids\\) { taskkill /F /PID $p 2>&1 }; Start-Sleep 3; $r = Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue; if \\($r\\) { \"Still listening: $\\($r.OwningProcess\\)\" } else { \"Port 8000 is free\" })",
+      "PowerShell(netstat -ano)",
+      "PowerShell(taskkill /F /PID 16528 2>&1)",
+      "PowerShell(taskkill /F /PID 28292 2>&1)",
+      "PowerShell($h = @{ \"X-Admin-Key\" = \"SkillForge@Admin2024\" }; Write-Output \"=== GET /api/admin/ai-config ===\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:8000/api/admin/ai-config\" -Headers $h -TimeoutSec 15; \\($r.Content | ConvertFrom-Json\\).data | ConvertTo-Json -Depth 5 } catch { Write-Output \"ERR: $\\($_.Exception.Message\\)\"; if \\($_.Exception.Response\\) { $s=$_.Exception.Response.GetResponseStream\\(\\); \\(New-Object System.IO.StreamReader\\($s\\)\\).ReadToEnd\\(\\) } })",
+      "PowerShell($pids = \\(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue\\).OwningProcess | Sort-Object -Unique; foreach \\($p in $pids\\) { try { Stop-Process -Id $p -Force -ErrorAction Stop } catch {} }; Start-Sleep 3; $o=\"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_out.log\"; $e=\"C:\\\\Users\\\\Dhruv\\\\AppData\\\\Local\\\\Temp\\\\backend_err.log\"; Remove-Item $o,$e -ErrorAction SilentlyContinue; cd \"C:\\\\Users\\\\Dhruv\\\\Downloads\\\\Clarifying project format\\\\backend\"; Start-Process -FilePath \".\\\\venv\\\\Scripts\\\\uvicorn.exe\" -ArgumentList \"app.main:app\",\"--host\",\"0.0.0.0\",\"--port\",\"8000\" -RedirectStandardOutput $o -RedirectStandardError $e -WindowStyle Hidden; Start-Sleep 12; Get-Content $o,$e -ErrorAction SilentlyContinue | Select-Object -Last 6)",
+      "Bash(grep -E \"\\\\.env$\")"
     ]
   }
 }

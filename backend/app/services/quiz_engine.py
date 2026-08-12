@@ -11,6 +11,7 @@ async def generate_quiz(
     objective: str,
     skills: list,
     content_summary: str = "",
+    user_id: str | None = None,
 ) -> list[dict]:
     ai = get_ai_provider()
     prompt = QUIZ_PROMPT.format(
@@ -21,7 +22,7 @@ async def generate_quiz(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="quiz_generation")
         if isinstance(result, dict):
             result = result.get("questions", list(result.values())[0] if result else [])
         if not isinstance(result, list) or len(result) == 0:

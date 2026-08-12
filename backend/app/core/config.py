@@ -13,9 +13,18 @@ class Settings(BaseSettings):
     database_url: str = ""
 
     # AI
-    ai_provider: str = "gemini"
+    ai_provider: str = "openai"
     gemini_api_key: str = ""
     openai_api_key: str = ""
+    gpt_api_key: str = ""          # alias — some .env files use GPT_API_KEY
+    openai_base_url: str = "https://agentrouter.org/v1"
+    openai_model: str = "gpt-5.6-sol"
+    openai_high_effort: bool = True
+
+    @property
+    def effective_openai_key(self) -> str:
+        """Return the first non-empty API key across all naming conventions."""
+        return self.openai_api_key or self.gpt_api_key or self.gemini_api_key
 
     # File storage
     max_resume_size_mb: int = 10
@@ -27,6 +36,9 @@ class Settings(BaseSettings):
     # App
     secret_key: str = "change-me"
     environment: str = "development"
+
+    # Admin
+    admin_secret_key: str = "SkillForge@Admin2024"
 
     @property
     def cors_origins_list(self) -> List[str]:

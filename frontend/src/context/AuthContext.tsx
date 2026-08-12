@@ -8,8 +8,9 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   onboardingCompleted: boolean
+  isAdmin: boolean
   refreshOnboarding: () => Promise<void>
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>
+  signIn: (email: string, password: string) => Promise<{ error: Error | null; onboardingCompleted: boolean }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
 }
@@ -21,21 +22,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [onboardingCompleted, setOnboardingCompleted] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const initialLoadDone = useRef(false)
 
-  const fetchOnboardingStatus = async () => {
+  // Returns the current onboardingCompleted value so callers can act on it immediately
+  const fetchOnboardingStatus = async (): Promise<boolean> => {
     try {
       const res = await api.get('/profile')
-      setOnboardingCompleted(res.data.data?.onboarding_completed ?? false)
+      const data = res.data.data
+      const completed = data?.onboarding_completed ?? false
+      const admin = data?.role === 'admin'
+      setOnboardingCompleted(completed)
+      setIsAdmin(admin)
+      return completed
     } catch {
       setOnboardingCompleted(false)
+      setIsAdmin(false)
+      return false
     }
   }
 
   useEffect(() => {
     let mounted = true
 
-    // Initial session check — covers page reload and existing sessions
     supabase.auth.getSession().then(async ({ data }) => {
       if (!mounted) return
       setSession(data.session)
@@ -44,26 +53,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await fetchOnboardingStatus()
       } else {
         setOnboardingCompleted(false)
+        setIsAdmin(false)
       }
       initialLoadDone.current = true
       setLoading(false)
     })
 
-    // Auth state changes (explicit sign-in / sign-out / token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return
       setSession(session)
       setUser(session?.user ?? null)
 
-      // INITIAL_SESSION is handled by getSession() above
       if (!initialLoadDone.current) return
 
-      if (event === 'SIGNED_IN' && session?.user) {
-        await fetchOnboardingStatus()
-      } else if (event === 'SIGNED_OUT') {
+      if (event === 'SIGNED_OUT') {
         setOnboardingCompleted(false)
+        setIsAdmin(false)
       }
-      // TOKEN_REFRESHED, USER_UPDATED — no profile re-fetch needed
     })
 
     return () => {
@@ -77,8 +83,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signIn = async (email: string, password: string) => {
+    // Hold loading=true so AuthRedirect shows a spinner instead of redirecting
+    // to /onboarding while user is set but onboardingCompleted is still false.
+    setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error: error ? new Error(error.message) : null }
+    if (error) {
+      setLoading(false)
+      return { error: new Error(error.message), onboardingCompleted: false }
+    }
+    // Fetch profile BEFORE clearing loading — AuthRedirect won't act until this resolves
+    const completed = await fetchOnboardingStatus()
+    setLoading(false)
+    return { error: null, onboardingCompleted: completed }
   }
 
   const signUp = async (email: string, password: string, fullName: string) => {
@@ -95,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, onboardingCompleted, refreshOnboarding, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, onboardingCompleted, isAdmin, refreshOnboarding, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   )

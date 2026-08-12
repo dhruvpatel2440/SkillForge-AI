@@ -1,32 +1,61 @@
 SYSTEM_JSON = (
-    "You are an expert career coach and technical recruiter. "
-    "You MUST respond with valid JSON only. No explanations outside JSON. "
-    "No markdown code fences. Pure JSON."
+    "You are a strict, evidence-only technical recruiter and career coach. "
+    "Your job is to be ACCURATE, not kind. Never inflate scores. Never assume skills the resume does not prove. "
+    "A skill listed in a skills section with NO project or experience backing is a CLAIM, not a demonstrated skill. "
+    "Treat claims skeptically. Only reward what the resume actually proves with concrete context. "
+    "You MUST respond with valid JSON only. No explanations outside JSON. No markdown fences. Pure JSON."
 )
 
 RESUME_EXTRACTION_PROMPT = """
-Analyze the following resume markdown and extract structured information.
+Analyze the resume below. Extract ONLY what is explicitly stated. Do NOT infer, assume, or add skills not mentioned.
 
 Resume:
 {markdown}
 
-Return a JSON object with this exact structure:
+---
+EXTRACTION RULES (follow strictly):
+
+SKILL CLASSIFICATION:
+- CLAIMED: skill appears only in a "Skills" or "Technologies" list with no project/experience context → confidence 0.2-0.45
+- TOUCHED: skill appears in a project/experience description vaguely (e.g. "used Python") → confidence 0.45-0.60
+- DEMONSTRATED: skill appears with a specific project outcome, feature built, or measurable result → confidence 0.60-0.80
+- PROVEN: skill appears across multiple projects OR with quantified results (e.g. "reduced latency 40%") → confidence 0.80-1.0
+
+PROFICIENCY MAPPING:
+- beginner: CLAIMED or TOUCHED skills, no depth shown, <1 year implied
+- intermediate: DEMONSTRATED in 1-2 projects, clear usage context
+- advanced: PROVEN across multiple contexts, measurable outcomes, or leadership/architectural decisions
+
+CONFIDENCE SCORING (be conservative, err low not high):
+- Self-listed skill section only: 0.2-0.4
+- Mentioned once in a project with no detail: 0.4-0.55
+- Core technology in a project with some description: 0.55-0.70
+- Multiple projects + described outcomes: 0.70-0.85
+- Years of experience documented + measurable results: 0.85-1.0
+
+EVIDENCE: Quote the EXACT phrase or sentence from the resume that proves this skill.
+If you cannot find a direct quote, the evidence_strength is "weak" and you must use confidence ≤ 0.45.
+
+Return this exact JSON:
 {{
   "candidate": {{
     "name": "",
     "email": "",
     "phone": "",
     "location": "",
-    "summary": ""
+    "summary": "",
+    "total_experience_years": 0.0
   }},
   "skills": [
     {{
-      "name": "skill name",
-      "category": "Web Development|Backend|Data Science|DevOps|Security|Other",
+      "name": "exact skill name as it appears in resume",
+      "category": "Web Development|Backend|Data Science|DevOps|Mobile|Database|Security|AI/ML|Other",
       "proficiency": "beginner|intermediate|advanced",
-      "confidence": 0.0-1.0,
-      "evidence": "quote or context from resume",
-      "evidence_source": "Skills section|Projects|Experience|Education",
+      "classification": "claimed|touched|demonstrated|proven",
+      "confidence": 0.0,
+      "years_estimated": 0.0,
+      "evidence": "EXACT quote from resume (copy-paste, not paraphrase)",
+      "evidence_source": "Skills section|Projects|Experience|Education|Certifications",
       "evidence_strength": "strong|moderate|weak"
     }}
   ],
@@ -36,7 +65,8 @@ Return a JSON object with this exact structure:
       "description": "",
       "technologies": [],
       "role": "",
-      "evidence": "key achievement or detail"
+      "outcome": "quantified or specific result if mentioned, else empty string",
+      "evidence": "key line from resume proving this project"
     }}
   ],
   "experience": [
@@ -45,8 +75,10 @@ Return a JSON object with this exact structure:
       "role": "",
       "start_date": "",
       "end_date": "",
+      "duration_months": 0,
       "description": "",
-      "technologies": []
+      "technologies": [],
+      "achievements": ["quantified achievement if any"]
     }}
   ],
   "education": [
@@ -55,7 +87,8 @@ Return a JSON object with this exact structure:
       "degree": "",
       "field": "",
       "start_date": "",
-      "end_date": ""
+      "end_date": "",
+      "gpa": ""
     }}
   ],
   "certifications": [
@@ -65,83 +98,220 @@ Return a JSON object with this exact structure:
       "date": ""
     }}
   ],
-  "achievements": []
+  "achievements": ["only include if measurable/specific — not generic statements"],
+  "red_flags": [
+    "List any inconsistencies, date gaps > 6 months, skills listed but never used in any project, or suspicious claims"
+  ]
 }}
 
-CRITICAL EVIDENCE RULES:
-- A skill listed only in the Skills section with no project/experience backing = evidence_strength "weak", confidence 0.3-0.5
-- A skill with a project using it = evidence_strength "moderate", confidence 0.6-0.75
-- A skill with measurable project achievements = evidence_strength "strong", confidence 0.8-1.0
-- A skill with multiple projects + experience = evidence_strength "strong", confidence 0.85-1.0
+ANTI-INFLATION RULES (strictly enforce):
+1. Do NOT list a skill if the ONLY evidence is that it appears in a generic skills list.
+   Instead mark it classification="claimed", confidence≤0.40, evidence_strength="weak".
+2. Do NOT give "advanced" proficiency unless there is multi-project evidence with outcomes.
+3. Do NOT round confidence up. Be conservative.
+4. red_flags MUST include any skill listed in "Skills" section that appears in ZERO projects and ZERO experience descriptions.
 """
 
 GAP_ANALYSIS_PROMPT = """
-Perform a comprehensive skill gap analysis.
+Perform a precise, evidence-based skill gap analysis. Be strict. Do not inflate the readiness score.
 
-Candidate resume (markdown):
+---
+CANDIDATE RESUME:
 {markdown}
 
-Extracted skills:
+EXTRACTED SKILLS (with classification and confidence):
 {skills_json}
 
-Projects:
+PROJECTS:
 {projects_json}
 
-Experience:
+EXPERIENCE:
 {experience_json}
 
-Target role: {target_role}
-Timeline: {timeline_months} months
-Weekly hours available: {weekly_hours}
+TARGET ROLE: {target_role}
+TIMELINE: {timeline_months} months
+WEEKLY HOURS: {weekly_hours}
 
-Return a JSON object:
+---
+ANALYSIS PROTOCOL (follow in order):
+
+STEP 1 — ESTABLISH ROLE REQUIREMENTS:
+List the must-have, should-have, and nice-to-have skills for {target_role} based on industry-standard job descriptions.
+Classify each as: critical (blocks hiring without it) | important (expected) | bonus (differentiator)
+
+STEP 2 — MATCH CANDIDATE AGAINST REQUIREMENTS:
+For each required skill, find the BEST matching candidate skill (if any).
+Only count a skill as "covered" if its classification is "demonstrated" or "proven".
+Skills classified as "claimed" or "touched" count as PARTIALLY covered (50% credit at most).
+
+STEP 3 — SCORE CALCULATION (do not deviate from this formula):
+- technical_skills (max 35): sum of (skill_weight × coverage_fraction) for each required skill
+  - critical skill covered (demonstrated/proven): full points
+  - critical skill partially covered (claimed/touched): 50% of points
+  - critical skill missing: 0 points
+- projects_evidence (max 25): relevance and depth of projects to target role
+  - Each directly relevant project with outcomes: 6-8 points
+  - Each tangentially relevant project: 2-4 points
+  - Generic/tutorial projects: 0-1 point
+- experience (max 15): work experience relevance and total months
+  - Directly relevant role experience: up to 15 points
+  - Adjacent field experience: up to 8 points
+  - No professional experience: 0 points
+- role_requirements (max 15): % of critical+important requirements covered (demonstrated/proven only)
+  - Multiply 15 × (covered_critical / total_critical)
+- certifications_achievements (max 10): relevant certifications + measurable achievements
+  - Each role-relevant certification: 3-4 points
+  - Each quantified achievement: 1-2 points
+
+STEP 4 — ANTI-INFLATION CHECK:
+If readiness_score > 70 but candidate has critical skills only "claimed" (not demonstrated), reduce score by 10-15.
+If candidate has <2 relevant projects, cap projects_evidence at 10.
+If no professional experience, cap experience at 3.
+
+Return this exact JSON:
 {{
-  "readiness_score": 0-100,
+  "readiness_score": 0,
   "score_breakdown": {{
-    "technical_skills": 0-35,
-    "projects_evidence": 0-25,
-    "experience": 0-15,
-    "role_requirements": 0-15,
-    "certifications_achievements": 0-10
+    "technical_skills": 0,
+    "projects_evidence": 0,
+    "experience": 0,
+    "role_requirements": 0,
+    "certifications_achievements": 0
+  }},
+  "role_requirements_map": {{
+    "critical": [
+      {{
+        "skill": "",
+        "candidate_coverage": "none|claimed|touched|demonstrated|proven",
+        "coverage_score": 0.0,
+        "notes": ""
+      }}
+    ],
+    "important": [
+      {{
+        "skill": "",
+        "candidate_coverage": "none|claimed|touched|demonstrated|proven",
+        "coverage_score": 0.0,
+        "notes": ""
+      }}
+    ],
+    "bonus": [
+      {{
+        "skill": "",
+        "candidate_coverage": "none|claimed|touched|demonstrated|proven",
+        "coverage_score": 0.0,
+        "notes": ""
+      }}
+    ]
   }},
   "strengths": [
     {{
       "skill": "",
-      "level": "",
-      "evidence": "",
-      "demand_in_role": 0.0-1.0
+      "level": "beginner|intermediate|advanced",
+      "evidence": "exact quote from resume proving this strength",
+      "demand_in_role": 0.0,
+      "classification": "demonstrated|proven"
     }}
   ],
   "weak_skills": [
     {{
       "skill": "",
-      "issue": "listed but not demonstrated",
-      "recommendation": ""
+      "issue": "claimed but not demonstrated in any project or experience",
+      "resume_location": "where it appears (e.g. Skills section)",
+      "recommendation": "what project or task would prove this skill"
     }}
   ],
   "missing_skills": [
     {{
       "skill": "",
       "current_level": "none|beginner|intermediate",
-      "target_level": "beginner|intermediate|advanced",
-      "gap_size": 0-100,
+      "target_level": "intermediate|advanced",
+      "gap_size": 0,
       "priority": "critical|high|medium|low",
-      "reason": "why this skill matters for target role",
-      "demand_frequency": 0.0-1.0,
-      "recommended_action": "specific action to close this gap"
+      "reason": "why this specific skill is needed for {target_role}",
+      "demand_frequency": 0.0,
+      "time_to_learn_weeks": 0,
+      "recommended_action": "specific, actionable step (e.g. 'Build a REST API with authentication using FastAPI')"
     }}
   ],
-  "project_gaps": ["skill that needs project evidence"],
-  "experience_gaps": ["type of practical exposure missing"],
-  "recommendations": ["top 3-5 specific recommendations ordered by impact"]
+  "project_gaps": [
+    {{
+      "skill": "skill that needs project evidence",
+      "suggested_project": "concrete mini-project idea to prove this skill"
+    }}
+  ],
+  "experience_gaps": ["specific type of practical exposure missing"],
+  "honest_assessment": "2-3 sentence honest assessment of where the candidate actually stands for {target_role}. No sugarcoating.",
+  "recommendations": [
+    "Top 5 specific, ordered-by-impact actions the candidate should take NOW"
+  ]
 }}
 
-Scoring rules:
-- technical_skills: weighted by evidence_strength and demand in target role
-- projects_evidence: depth and relevance of projects to target role
-- experience: work experience relevance and duration
-- role_requirements: coverage of must-have skills for target role
-- certifications_achievements: relevant certs and measurable achievements
+SCORING RULES (non-negotiable):
+- A candidate who lists 10 skills but demonstrates 0 in projects should score 20-35, not 60+.
+- Only strengths with classification "demonstrated" or "proven" count as real strengths.
+- missing_skills must include ALL critical role requirements not demonstrated (not just a few).
+- gap_size: 0=no gap, 100=completely missing. Be honest: if they listed the skill but never used it, gap_size should be 60-75.
+- demand_frequency: based on how often this skill appears in real job postings for {target_role} (0=rare, 1=every job posting).
+"""
+
+PROJECT_RECOMMENDATIONS_PROMPT = """
+Generate personalized project recommendations for this candidate.
+
+TARGET ROLE: {target_role}
+TIMELINE: {timeline_months} months, {weekly_hours} hrs/week
+
+MISSING SKILLS (from gap analysis):
+{missing_skills_json}
+
+WEAK/UNPROVEN SKILLS (listed but no project backing):
+{weak_skills_json}
+
+CANDIDATE'S EXISTING STRONG SKILLS:
+{strong_skills_json}
+
+CANDIDATE'S EXISTING PROJECTS (do NOT repeat these):
+{existing_projects_json}
+
+---
+Generate exactly 5 project recommendations. Each project must:
+1. Close at least 2 of the candidate's missing/weak skills
+2. Build on skills they already have (so it's achievable, not starting from zero)
+3. Be scoped to their weekly hours: {weekly_hours} hrs/week
+4. Be something that can go on a GitHub portfolio and impress an interviewer for {target_role}
+
+Project types to include (use exactly these labels):
+- 1 FLAGSHIP: large, 4-6 week project covering the most critical gaps
+- 1 INFRASTRUCTURE: deployment/DevOps/tooling project (2-4 weeks)
+- 2 DEPTH: focused single-skill deep-dive projects (1-3 weeks each)
+- 1 STARTER: quick win to close an easy gap (< 1 week, <10 hrs total)
+
+Return a JSON array of exactly 5 objects:
+[
+  {{
+    "id": "proj_1",
+    "title": "concise project name",
+    "type": "flagship|infrastructure|depth|starter",
+    "type_label": "FLAGSHIP|INFRASTRUCTURE|DEPTH|STARTER",
+    "duration_weeks_min": 1,
+    "duration_weeks_max": 6,
+    "description": "2-3 sentence description of what to build and why it proves the skills. Be concrete.",
+    "technologies": ["tech1", "tech2"],
+    "closes_gaps": ["exact skill name from missing_skills or weak_skills"],
+    "gap_count_closed": 3,
+    "learning_outcomes": ["Can build X", "Understands Y", "Deployed Z"],
+    "estimated_hours": 40,
+    "difficulty": "beginner|intermediate|advanced",
+    "repo_structure_hint": "one-line hint on how to structure the repo (e.g. monorepo, REST API + React frontend, CLI tool)"
+  }}
+]
+
+RULES:
+- closes_gaps must contain EXACT skill names from the missing/weak skill lists — do NOT invent new skill names
+- technologies must include skills the candidate is MISSING (that's the point) + some they know
+- estimated_hours must fit within the duration × weekly_hours
+- Do NOT repeat any project the candidate already has
+- Description must be specific — not generic ("build a CRUD app"), but detailed ("Build a job-board API with JWT auth, rate limiting, and a PostgreSQL schema — then deploy it to Railway with a CI/CD pipeline")
 """
 
 ROADMAP_PROMPT = """

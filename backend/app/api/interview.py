@@ -61,9 +61,10 @@ async def get_or_generate_interview_questions(
             projects=[{"name": p.name, "description": p.description, "technologies": p.technologies} for p in projects],
             strong_skills=strong_skills,
             gaps=gaps,
+            user_id=user_id,
         )
-    except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e) if str(e) else "AI request failed. Try again.")
 
     for cat, qs in questions_by_category.items():
         if not isinstance(qs, list):
@@ -115,9 +116,10 @@ async def answer_interview_question(
             target_role=question.target_role,
             resume_context=analysis.summary if analysis else "",
             answer_guidance=question.answer_guidance or "",
+            user_id=user_id,
         )
-    except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e) if str(e) else "AI request failed. Try again.")
 
     attempt = InterviewAttempt(
         user_id=user_id,

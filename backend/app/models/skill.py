@@ -15,6 +15,8 @@ class Skill(Base):
     category: Mapped[str] = mapped_column(String, nullable=True)
     proficiency: Mapped[str] = mapped_column(String, nullable=True)
     confidence: Mapped[float] = mapped_column(Float, nullable=True)
+    classification: Mapped[str] = mapped_column(String, nullable=True)  # claimed|touched|demonstrated|proven
+    years_estimated: Mapped[float] = mapped_column(Float, nullable=True)
     evidence: Mapped[str] = mapped_column(Text, nullable=True)
     evidence_source: Mapped[str] = mapped_column(String, nullable=True)
     evidence_strength: Mapped[str] = mapped_column(String, nullable=True)

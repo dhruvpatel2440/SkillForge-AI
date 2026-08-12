@@ -1,6 +1,5 @@
 import json
 import logging
-import math
 from app.ai.service import get_ai_provider
 from app.ai.prompts import ROADMAP_PROMPT, SYSTEM_JSON
 
@@ -12,6 +11,7 @@ async def generate_roadmap(
     timeline_months: int,
     weekly_hours: int,
     gap_analysis: dict,
+    user_id: str | None = None,
 ) -> list[dict]:
     ai = get_ai_provider()
     duration_weeks = timeline_months * 4
@@ -33,7 +33,7 @@ async def generate_roadmap(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="roadmap_generation")
         if isinstance(result, dict) and "weeks" in result:
             result = result["weeks"]
         if not isinstance(result, list):

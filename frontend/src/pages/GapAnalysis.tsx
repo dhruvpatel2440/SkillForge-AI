@@ -16,6 +16,7 @@ interface MissingSkill {
   gap_size: number; priority: string; reason: string
   demand_frequency: number; recommended_action: string
 }
+interface ProjectGap { skill: string; suggested_project: string }
 interface GapData {
   target_role: string
   readiness_score: number
@@ -23,6 +24,9 @@ interface GapData {
   strengths: Strength[]
   weak_skills: WeakSkill[]
   missing_skills: MissingSkill[]
+  project_gaps: ProjectGap[]
+  experience_gaps: string[]
+  honest_assessment: string
   recommendations: string[]
 }
 
@@ -97,6 +101,7 @@ export default function GapAnalysis() {
   const [gap, setGap] = useState<GapData | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
+  const [regenerating, setRegenerating] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -116,6 +121,19 @@ export default function GapAnalysis() {
       toast.error(e.message)
     } finally {
       setGenerating(false)
+    }
+  }
+
+  const handleRegenerate = async () => {
+    setRegenerating(true)
+    try {
+      const r = await gapApi.generate()
+      if (r.data.data) setGap(r.data.data)
+      toast.success('Gap analysis refreshed')
+    } catch (e: any) {
+      toast.error('Regeneration failed')
+    } finally {
+      setRegenerating(false)
     }
   }
 
@@ -163,9 +181,13 @@ export default function GapAnalysis() {
           </p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
-          <button className="btn btn-secondary" onClick={handleBuildRoadmap} disabled={generating}
-            style={{ border: '1px solid var(--color-divider)', minWidth: 160 }}>
+          <button className="btn btn-primary" onClick={handleBuildRoadmap} disabled={generating || regenerating}
+            style={{ minWidth: 170 }}>
             {generating ? 'Building…' : 'Build my roadmap →'}
+          </button>
+          <button className="btn btn-secondary" onClick={handleRegenerate} disabled={regenerating || generating}
+            style={{ border: '1px solid var(--color-divider)', minWidth: 170, fontSize: 12 }}>
+            {regenerating ? 'Re-analysing…' : '↻ Re-analyse resume'}
           </button>
           <div style={{ fontSize: 11, color: 'var(--color-neutral-600)', textAlign: 'right' }}>
             Readiness <span style={{ fontFamily: 'var(--font-heading)', fontSize: 20, color: scoreColor, fontVariantNumeric: 'tabular-nums' }}>{gap.readiness_score}</span>
@@ -290,9 +312,52 @@ export default function GapAnalysis() {
         </div>
       </div>
 
+      {/* ── Honest Assessment ── */}
+      {gap.honest_assessment && (
+        <div style={{
+          marginTop: 40,
+          padding: '18px 22px',
+          border: '1px solid var(--color-divider)',
+          borderLeft: '3px solid var(--color-accent)',
+          borderRadius: 6,
+          background: 'color-mix(in srgb, var(--color-accent) 5%, var(--color-bg))',
+        }}>
+          <div className="card-kicker" style={{ marginBottom: 8 }}>Honest assessment</div>
+          <p style={{ fontSize: 14, lineHeight: 1.7, margin: 0, color: 'var(--color-text)' }}>
+            {gap.honest_assessment}
+          </p>
+        </div>
+      )}
+
+      {/* ── Project Gaps ── */}
+      {gap.project_gaps?.length > 0 && (
+        <div style={{ marginTop: 36 }}>
+          <hr className="hr" style={{ marginBottom: 24 }} />
+          <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: 20, marginBottom: 4 }}>Projects to build</h4>
+          <p className="text-muted" style={{ fontSize: 12, marginBottom: 16 }}>
+            Skills that need project evidence — build these to prove your capability
+          </p>
+          <div style={{ display: 'grid', gap: 12 }}>
+            {gap.project_gaps.map((pg, i) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '160px 1fr', gap: 16,
+                padding: '12px 16px', border: '1px solid var(--color-divider)', borderRadius: 6,
+              }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: 15, color: 'var(--color-accent)' }}>
+                  {pg.skill}
+                </span>
+                <span style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--color-text)' }}>
+                  {pg.suggested_project}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Recommendations ── */}
       {gap.recommendations?.length > 0 && (
-        <div style={{ marginTop: 48 }}>
+        <div style={{ marginTop: 36 }}>
           <hr className="hr" style={{ marginBottom: 24 }} />
           <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: 20, marginBottom: 16 }}>Recommendations</h4>
           <ol style={{ paddingLeft: 20, display: 'grid', gap: 10 }}>

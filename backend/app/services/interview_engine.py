@@ -12,6 +12,7 @@ async def generate_interview_questions(
     projects: list,
     strong_skills: list,
     gaps: list,
+    user_id: str | None = None,
 ) -> dict:
     ai = get_ai_provider()
     prompt = INTERVIEW_PROMPT.format(
@@ -23,7 +24,7 @@ async def generate_interview_questions(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="interview_generation")
         return result
     except Exception as e:
         logger.error(f"Interview generation failed: {e}")
@@ -36,6 +37,7 @@ async def evaluate_interview_answer(
     target_role: str,
     resume_context: str,
     answer_guidance: str,
+    user_id: str | None = None,
 ) -> dict:
     ai = get_ai_provider()
     prompt = INTERVIEW_FEEDBACK_PROMPT.format(
@@ -47,7 +49,7 @@ async def evaluate_interview_answer(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="interview_feedback")
         return result
     except Exception as e:
         logger.error(f"Interview feedback failed: {e}")

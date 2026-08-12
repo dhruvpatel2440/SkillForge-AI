@@ -14,6 +14,7 @@ async def generate_gap_analysis(
     target_role: str,
     timeline_months: int,
     weekly_hours: int,
+    user_id: str | None = None,
 ) -> dict:
     ai = get_ai_provider()
     prompt = GAP_ANALYSIS_PROMPT.format(
@@ -27,18 +28,22 @@ async def generate_gap_analysis(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="gap_analysis")
         _validate_gap_result(result)
         return result
     except Exception as e:
         logger.warning(f"Gap analysis first attempt failed: {e}. Retrying.")
-        correction = (
-            f"Return ONLY valid JSON. No text outside JSON. "
-            f"Original task:\n{prompt}"
-        )
-        result = await ai.generate_json(correction, system=SYSTEM_JSON)
-        _validate_gap_result(result)
-        return result
+        try:
+            correction = (
+                f"Return ONLY valid JSON. No text outside JSON. "
+                f"Original task:\n{prompt}"
+            )
+            result = await ai.generate_json(correction, system=SYSTEM_JSON, user_id=user_id, feature="gap_analysis")
+            _validate_gap_result(result)
+            return result
+        except Exception as e2:
+            logger.error(f"Gap analysis retry also failed: {e2}")
+            raise ValueError(f"Gap analysis failed: {e2}") from e2
 
 
 def _validate_gap_result(result: dict) -> None:
@@ -47,5 +52,12 @@ def _validate_gap_result(result: dict) -> None:
         if key not in result:
             raise ValueError(f"Missing key in gap analysis: {key}")
     score = result["readiness_score"]
-    if not (0 <= score <= 100):
-        raise ValueError(f"Invalid readiness_score: {score}")
+    if not isinstance(score, (int, float)):
+        raise ValueError(f"readiness_score must be a number, got: {type(score)}")
+    result["readiness_score"] = max(0, min(100, int(score)))
+    # Normalise score_breakdown values
+    breakdown = result.get("score_breakdown", {})
+    caps = {"technical_skills": 35, "projects_evidence": 25, "experience": 15, "role_requirements": 15, "certifications_achievements": 10}
+    for k, cap in caps.items():
+        if k in breakdown:
+            breakdown[k] = max(0, min(cap, int(breakdown[k])))

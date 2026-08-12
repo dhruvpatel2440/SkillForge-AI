@@ -1,14 +1,15 @@
 import os
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.config import get_settings
 from app.core.database import create_tables
 import app.models  # noqa: F401 — registers all models with Base.metadata before create_tables()
-from app.api import auth, profile, resumes, skills, gap_analysis, roadmap, quiz, interview, dashboard
+from app.api import auth, profile, resumes, skills, gap_analysis, roadmap, quiz, interview, dashboard, admin, project_recs
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,6 +25,10 @@ async def lifespan(app: FastAPI):
         logger.info("Database tables ready")
     except Exception as e:
         logger.warning(f"DB init warning (tables may already exist): {e}")
+
+    from app.core.ai_config import load_active_model_from_db
+    active_model = await load_active_model_from_db()
+    logger.info(f"Active AI model: {active_model}")
     yield
     logger.info("Shutting down...")
 
@@ -44,12 +49,19 @@ app.add_middleware(
 )
 
 
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Pass HTTPExceptions through with their original detail intact."""
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    """Catch truly unhandled exceptions — never called for HTTPException."""
     logger.error(f"Unhandled error: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"success": False, "error": {"code": "INTERNAL_ERROR", "message": "An unexpected error occurred"}},
+        content={"detail": "An internal server error occurred. Please try again."},
     )
 
 
@@ -68,3 +80,5 @@ app.include_router(roadmap.router)
 app.include_router(quiz.router)
 app.include_router(interview.router)
 app.include_router(dashboard.router)
+app.include_router(admin.router)
+app.include_router(project_recs.router)

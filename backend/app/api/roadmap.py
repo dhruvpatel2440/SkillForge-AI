@@ -52,9 +52,10 @@ async def generate_roadmap_endpoint(
             timeline_months=prefs.timeline_months,
             weekly_hours=prefs.weekly_hours,
             gap_analysis=gap.raw_ai_response or {},
+            user_id=user_id,
         )
-    except ValueError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e) if str(e) else "Roadmap generation failed. Try again.")
 
     roadmap = Roadmap(
         user_id=user_id,
@@ -157,6 +158,7 @@ async def get_week_detail(
                 skills=week.skills or [],
                 phase=week.phase,
                 estimated_hours=week.estimated_hours or 8,
+                user_id=user_id,
             )
             for r in resources_data:
                 res = LearningResource(

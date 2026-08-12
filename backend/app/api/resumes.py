@@ -60,13 +60,21 @@ async def _auto_generate_pipeline(db: AsyncSession, user_id: str, resume_id: str
 
         gap_result = await generate_gap_analysis(
             markdown=markdown,
-            skills=[{"name": s.name, "proficiency": s.proficiency,
-                     "evidence_strength": s.evidence_strength, "evidence": s.evidence} for s in skills],
+            skills=[{
+                "name": s.name,
+                "proficiency": s.proficiency,
+                "classification": s.classification or "claimed",
+                "confidence": s.confidence or 0.3,
+                "years_estimated": s.years_estimated or 0.0,
+                "evidence_strength": s.evidence_strength,
+                "evidence": s.evidence,
+            } for s in skills],
             projects=[{"name": p.name, "description": p.description, "technologies": p.technologies} for p in projects],
             experience=[{"company": e.company, "role": e.role, "description": e.description} for e in experience],
             target_role=prefs.target_role,
             timeline_months=prefs.timeline_months,
             weekly_hours=prefs.weekly_hours,
+            user_id=user_id,
         )
 
         existing_gap = GapAnalysis(
@@ -101,6 +109,7 @@ async def _auto_generate_pipeline(db: AsyncSession, user_id: str, resume_id: str
             timeline_months=prefs.timeline_months,
             weekly_hours=prefs.weekly_hours,
             gap_analysis=existing_gap.raw_ai_response or {},
+            user_id=user_id,
         )
 
         roadmap = Roadmap(
@@ -163,7 +172,7 @@ async def _process_resume(resume_id: str, user_id: str, content: bytes, markdown
             resume.processing_status = "analyzing"
             await db.commit()
 
-            analysis_data = await analyze_resume(markdown)
+            analysis_data = await analyze_resume(markdown, user_id=user_id)
 
             # Delete old derived data so re-uploads don't create duplicates
             await db.execute(delete(Skill).where(Skill.user_id == user_id))
@@ -189,7 +198,9 @@ async def _process_resume(resume_id: str, user_id: str, content: bytes, markdown
                     name=s.get("name", ""),
                     category=s.get("category", ""),
                     proficiency=s.get("proficiency", "beginner"),
-                    confidence=s.get("confidence", 0.5),
+                    confidence=float(s.get("confidence", 0.3)),
+                    classification=s.get("classification", "claimed"),
+                    years_estimated=float(s.get("years_estimated", 0.0)),
                     evidence=s.get("evidence", ""),
                     evidence_source=s.get("evidence_source", ""),
                     evidence_strength=s.get("evidence_strength", "weak"),

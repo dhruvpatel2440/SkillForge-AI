@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 // Routes where returning users (onboarding done) should not go back
-const ONBOARDING_PATHS = ['/onboarding', '/upload']
+const ONBOARDING_PATHS = ['/onboarding']
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, onboardingCompleted } = useAuth()

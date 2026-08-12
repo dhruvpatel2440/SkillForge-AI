@@ -12,6 +12,7 @@ async def generate_resources(
     skills: list,
     phase: str,
     estimated_hours: int,
+    user_id: str | None = None,
 ) -> list[dict]:
     ai = get_ai_provider()
     prompt = RESOURCE_PROMPT.format(
@@ -23,7 +24,7 @@ async def generate_resources(
     )
 
     try:
-        result = await ai.generate_json(prompt, system=SYSTEM_JSON)
+        result = await ai.generate_json(prompt, system=SYSTEM_JSON, user_id=user_id, feature="resource_generation")
         if isinstance(result, dict):
             result = result.get("resources", list(result.values())[0] if result else [])
         if not isinstance(result, list):
