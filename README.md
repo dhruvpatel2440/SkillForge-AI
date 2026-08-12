@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # SkillForge AI
 
 AI-powered personalized career roadmap platform. Upload your resume, get an evidence-linked skill gap analysis, and receive a week-by-week learning roadmap with quizzes, resources, and interview preparation.
@@ -129,4 +128,3 @@ GET  /health
 ```
 =======
 # SkillForge-AI
->>>>>>> ad87967136f4629f5ab4229888b96d2355a91263
