@@ -44,6 +44,7 @@ yarn-error.log*
 # Vite / build output
 frontend/dist/
 frontend/.vite/
+vite.config.ts.timestamp-*.mjs
 
 # IDE
 .vscode/

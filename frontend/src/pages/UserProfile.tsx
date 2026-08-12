@@ -209,7 +209,7 @@ export default function UserProfile() {
 
       {/* ── Header ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 40 }}>
-        <Avatar name={profile?.full_name} size={72} />
+        <Avatar name={profile?.full_name ?? null} size={72} />
         <div>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 30, margin: 0, marginBottom: 4 }}>
             {profile?.full_name || 'Your Profile'}
