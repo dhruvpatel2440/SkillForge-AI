@@ -32,7 +32,8 @@
       "Bash(grep -E \"\\\\.env$\")",
       "Bash(git fetch *)",
       "Bash(git pull *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git add *)"
     ]
   }
 }
