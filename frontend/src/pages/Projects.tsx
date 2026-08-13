@@ -241,7 +241,7 @@ export default function Projects() {
   const { projects = [], total_open_gaps, target_role } = data
 
   return (
-    <div style={{ maxWidth: 1160, margin: '0 auto', padding: '48px 24px 80px' }}>
+    <div className="sf-page" style={{ maxWidth: 1160 }}>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24, marginBottom: 8 }}>
@@ -280,7 +280,7 @@ export default function Projects() {
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
           gap: 20,
         }}>
           {projects.map((p) => (

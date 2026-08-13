@@ -68,7 +68,7 @@ export default function Interview() {
   if (loading) return <Spinner />
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page" style={{ maxWidth: 900 }}>
       <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 34, marginBottom: 6 }}>Interview prep</h2>
       <p className="text-muted" style={{ fontSize: 14, maxWidth: '66ch' }}>
         Filtered to your profile: your claimed skills, closed gaps, and questions generated from your projects.
@@ -107,7 +107,8 @@ export default function Interview() {
           {filtered.map((q) => (
             <div key={q.id} style={{ borderBottom: '1px solid var(--color-divider)' }}>
               <div
-                style={{ padding: '16px 0', display: 'grid', gridTemplateColumns: '1fr 190px', gap: 16, alignItems: 'start', cursor: 'pointer' }}
+                className="sf-split-aside"
+                style={{ padding: '16px 0', cursor: 'pointer' }}
                 onClick={() => setExpanded(expanded === q.id ? null : q.id)}
               >
                 <div>

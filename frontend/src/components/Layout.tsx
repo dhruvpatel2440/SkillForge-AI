@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -123,9 +124,78 @@ function UserMenu() {
   )
 }
 
+function MobileMenu({ onClose }: { onClose: () => void }) {
+  const { user, signOut } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const go = (path: string) => {
+    onClose()
+    navigate(path)
+  }
+
+  const handleSignOut = async () => {
+    onClose()
+    await signOut()
+    toast.success('Signed out')
+    navigate('/login')
+  }
+
+  return (
+    <div className="sf-mobile-menu">
+      {NAV_ITEMS.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          onClick={onClose}
+          className={`sf-mobile-link${location.pathname.startsWith(item.path) ? ' is-active' : ''}`}
+        >
+          {item.label}
+        </Link>
+      ))}
+
+      <div style={{ marginTop: 'var(--space-6)' }}>
+        <div className="card-kicker" style={{ marginBottom: 'var(--space-2)' }}>Account</div>
+        <div className="text-muted" style={{ fontSize: 13, marginBottom: 'var(--space-3)' }}>
+          {user?.email}
+        </div>
+
+        <button className="btn btn-secondary btn-block" onClick={() => go('/account')}>
+          Manage profile
+        </button>
+        <button
+          className="btn btn-secondary btn-block"
+          style={{ marginTop: 'var(--space-2)' }}
+          onClick={() => go('/upload')}
+        >
+          Upload resume
+        </button>
+        <button
+          className="btn btn-block"
+          style={{ marginTop: 'var(--space-2)', color: '#dc2626', borderColor: 'var(--color-divider)' }}
+          onClick={handleSignOut}
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
   const location = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Close the menu whenever the route changes, so tapping a link never
+  // leaves the panel covering the page it navigated to.
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
+  // Prevent the page behind the full-screen menu from scrolling.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
@@ -135,33 +205,46 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Link>
 
         {user && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                style={{
-                  fontSize: 13,
-                  letterSpacing: '0.02em',
-                  color: location.pathname.startsWith(item.path)
-                    ? 'var(--color-accent-700)'
-                    : undefined,
-                  fontWeight: location.pathname.startsWith(item.path) ? 500 : 400,
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <UserMenu />
-          </div>
+          <>
+            <div className="sf-nav-links">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  style={{
+                    fontSize: 13,
+                    letterSpacing: '0.02em',
+                    color: location.pathname.startsWith(item.path)
+                      ? 'var(--color-accent-700)'
+                      : undefined,
+                    fontWeight: location.pathname.startsWith(item.path) ? 500 : 400,
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <UserMenu />
+            </div>
+
+            <button
+              className="sf-nav-burger"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </>
         )}
 
         {!user && (
-          <div className="text-muted" style={{ fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div className="text-muted sf-nav-tagline" style={{ fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             Evidence-linked skill roadmaps
           </div>
         )}
       </nav>
+
+      {user && menuOpen && <MobileMenu onClose={() => setMenuOpen(false)} />}
 
       <main>{children}</main>
     </div>

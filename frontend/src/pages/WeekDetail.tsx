@@ -54,7 +54,7 @@ export default function WeekDetail() {
   const phaseColor = PHASE_COLORS[week.phase] || 'var(--color-accent)'
 
   return (
-    <div style={{ maxWidth: 980, margin: '0 auto', padding: '28px 24px 64px' }}>
+    <div className="sf-page" style={{ maxWidth: 980 }}>
 
       {/* Back */}
       <button
@@ -92,7 +92,7 @@ export default function WeekDetail() {
       <hr style={{ border: 'none', borderTop: '1px solid var(--color-divider)', margin: '22px 0' }} />
 
       {/* Two-column body */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 52, alignItems: 'start' }}>
+      <div className="sf-split-even">
 
         {/* ── LEFT: Learning resources ── */}
         <div>

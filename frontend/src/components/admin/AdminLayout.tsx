@@ -22,17 +22,9 @@ export default function AdminLayout() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg)' }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: 220,
-        background: 'var(--color-bg)',
-        borderRight: '1px solid var(--color-divider)',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 0',
-        flexShrink: 0,
-      }}>
+    <div className="sf-admin-shell">
+      {/* Sidebar — becomes a horizontal tab strip on mobile */}
+      <aside className="sf-admin-side">
         <div style={{ padding: '0 20px 24px', borderBottom: '1px solid var(--color-divider)' }}>
           <div style={{ fontFamily: 'var(--font-heading)', fontSize: 19, letterSpacing: '-0.01em', color: 'var(--color-text)' }}>
             SkillForge
@@ -42,7 +34,7 @@ export default function AdminLayout() {
           </div>
         </div>
 
-        <nav style={{ flex: 1, padding: '12px 8px' }}>
+        <nav className="sf-admin-nav">
           {NAV.map(({ to, label, end }) => (
             <NavLink
               key={to}
@@ -67,7 +59,7 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div style={{ padding: '12px 20px', borderTop: '1px solid var(--color-divider)', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div className="sf-admin-foot">
           <NavLink
             to="/dashboard"
             style={{ fontSize: 12, color: 'var(--color-neutral-600)', textDecoration: 'none', fontFamily: 'var(--font-body)' }}
@@ -93,7 +85,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, overflow: 'auto', padding: '40px 48px' }}>
+      <main className="sf-admin-main">
         <Outlet />
       </main>
     </div>

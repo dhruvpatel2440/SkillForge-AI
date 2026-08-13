@@ -47,7 +47,7 @@ function Section({ title, icon, children }: { title: string; icon: React.ReactNo
 // ── Field row ─────────────────────────────────────────────
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', alignItems: 'start', gap: 16 }}>
+    <div className="sf-row-label">
       <label style={{ fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-neutral-600)', paddingTop: 8 }}>
         {label}
       </label>
@@ -205,7 +205,7 @@ export default function UserProfile() {
     : resume?.status === 'failed' ? '#dc2626' : '#d97706'
 
   return (
-    <div style={{ maxWidth: 820, margin: '0 auto', padding: '48px 24px 80px' }}>
+    <div className="sf-page" style={{ maxWidth: 820 }}>
 
       {/* ── Header ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 40 }}>

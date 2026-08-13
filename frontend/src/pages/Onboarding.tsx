@@ -67,7 +67,7 @@ export default function Onboarding() {
   })
 
   return (
-    <div style={{ maxWidth: 760, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page" style={{ maxWidth: 760 }}>
       {/* Steps indicator */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 40 }}>
         {STEP_LABELS.map((label, i) => (

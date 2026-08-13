@@ -10,19 +10,22 @@ export default function Landing() {
   const navigate = useNavigate()
 
   return (
-    <div style={{ maxWidth: 1080, margin: '0 auto', padding: '48px 24px 64px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 48, alignItems: 'start' }}>
+    <div className="sf-page">
+      <div className="sf-split-hero">
         <div>
           <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-accent)' }}>
             For students · 2026 job market
           </div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 400, fontSize: 58, lineHeight: 1.04, letterSpacing: '-0.02em', margin: '16px 0' }}>
+          <h1
+            className="sf-h1"
+            style={{ fontSize: 'clamp(34px, 7vw, 58px)', lineHeight: 1.04, letterSpacing: '-0.02em', margin: '16px 0' }}
+          >
             Every recommendation<br />carries a receipt.
           </h1>
-          <p style={{ fontSize: 17, lineHeight: 1.65, maxWidth: '46ch' }}>
+          <p style={{ fontSize: 'clamp(15px, 2.2vw, 17px)', lineHeight: 1.65, maxWidth: '46ch' }}>
             SkillForge reads your resume, extracts skills only where it can quote the line they came from, compares them against live job descriptions for your target role, and returns a week-by-week roadmap that reorders itself as you prove competence.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginTop: 24 }}>
             <button className="btn btn-primary" onClick={() => navigate('/register')} style={{ fontSize: 15, padding: '12px 22px' }}>
               Analyze My Resume
             </button>
@@ -47,7 +50,7 @@ export default function Landing() {
       </div>
 
       <hr className="hr" style={{ margin: '48px 0 24px' }} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
+      <div className="sf-cols-3">
         {POINTS.map((p) => (
           <div key={p.n}>
             <div style={{ fontFamily: 'var(--font-heading)', fontSize: 34, fontWeight: 400, color: 'var(--color-accent)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{p.n}</div>

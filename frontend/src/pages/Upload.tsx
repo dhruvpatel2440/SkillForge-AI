@@ -78,7 +78,7 @@ export default function Upload() {
   const isProcessing = status !== 'idle' && status !== 'failed'
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page" style={{ maxWidth: 720 }}>
       <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 34, marginBottom: 8 }}>Upload your resume</h2>
       <p className="text-muted" style={{ fontSize: 14 }}>
         PDF only. Text is extracted with PyMuPDF, hashed, and stored — the raw lines are what every citation points back to.

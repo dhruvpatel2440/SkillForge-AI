@@ -83,16 +83,16 @@ export default function Dashboard() {
   ]
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '44px 24px 80px' }}>
+    <div className="sf-page">
 
       {/* ── Header ── */}
       <div style={{ marginBottom: 28 }}>
         <div className="card-kicker" style={{ marginBottom: 4 }}>{data.target_role}</div>
-        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 40, margin: 0, fontWeight: 400 }}>Dashboard</h2>
+        <h2 className="sf-h2" style={{ fontSize: 'clamp(28px, 5vw, 40px)', margin: 0 }}>Dashboard</h2>
       </div>
 
       {/* ── Stat tiles ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, marginBottom: 36, borderBottom: '1px solid var(--color-divider)', paddingBottom: 28 }}>
+      <div className="sf-stat-row" style={{ marginBottom: 36, borderBottom: '1px solid var(--color-divider)', paddingBottom: 28 }}>
         {[
           { label: 'Readiness score', value: String(data.readiness_score), sub: 'out of 100', color: scoreColor },
           { label: 'Roadmap progress', value: `${data.roadmap_progress}%`, sub: `${data.completed_weeks}/${data.total_weeks} weeks` },
@@ -102,13 +102,13 @@ export default function Dashboard() {
             value: data.interview_prep_score ? String(Math.round(data.interview_prep_score)) : '—',
             sub: data.latest_quiz_score ? `Last quiz: ${data.latest_quiz_score}%` : 'No quiz yet',
           },
-        ].map((stat, i) => (
-          <div key={stat.label} style={{ paddingLeft: i === 0 ? 0 : 20, borderLeft: i === 0 ? 'none' : '1px solid var(--color-divider)' }}>
+        ].map((stat) => (
+          <div key={stat.label}>
             <div style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-neutral-600)', marginBottom: 4 }}>
               {stat.label}
             </div>
             <div style={{
-              fontFamily: 'var(--font-heading)', fontSize: 40, lineHeight: 1,
+              fontFamily: 'var(--font-heading)', fontSize: 'clamp(30px, 6vw, 40px)', lineHeight: 1,
               fontVariantNumeric: 'tabular-nums', color: stat.color || 'var(--color-accent)',
             }}>
               {stat.value}
@@ -119,7 +119,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Main two-column body ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.45fr 1fr', gap: 40, alignItems: 'start' }}>
+      <div className="sf-split-dash">
 
         {/* ════ LEFT COLUMN ════ */}
         <div style={{ display: 'grid', gap: 32 }}>

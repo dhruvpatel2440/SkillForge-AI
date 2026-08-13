@@ -67,7 +67,7 @@ export default function Roadmap() {
   if (loading) return <Spinner />
 
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page" style={{ maxWidth: 960 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24 }}>
         <div>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 34, marginBottom: 6 }}>Your roadmap</h2>

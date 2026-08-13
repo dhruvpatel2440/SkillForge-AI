@@ -62,7 +62,7 @@ export default function SkillProfile() {
   const total = skills.length
 
   return (
-    <div style={{ maxWidth: 1080, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page" style={{ maxWidth: 1080 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24 }}>
         <div>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 34, marginBottom: 6 }}>Skill profile</h2>
@@ -82,7 +82,7 @@ export default function SkillProfile() {
           No skills extracted yet. Upload and process your resume first.
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px,1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: 12 }}>
           {skills.map((s) => (
             <div key={s.id} className="card animate-rise">
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>

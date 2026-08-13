@@ -275,7 +275,7 @@ export default function AdminAIUsage() {
         <div className="text-muted" style={{ fontSize: 13, fontStyle: 'italic' }}>Loading historical data…</div>
       ) : (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 32 }}>
+          <div className="sf-cols-2" style={{ marginBottom: 32 }}>
             <div className="card">
               <div className="card-kicker">All-time by Feature</div>
               <div style={{ overflowX: 'auto' }}>

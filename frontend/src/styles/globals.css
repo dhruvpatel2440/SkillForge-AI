@@ -209,3 +209,211 @@ a:hover { color: var(--color-accent-700); }
 .phase-foundation { background: color-mix(in srgb, #4a9eff 12%, transparent); color: #2563eb; }
 .phase-intermediate { background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent-700); }
 .phase-advanced { background: color-mix(in srgb, #7c3aed 12%, transparent); color: #6d28d9; }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   Layout primitives live here rather than in inline styles, because
+   inline styles cannot carry media queries. Each grid helper owns its
+   own columns + gap so both can retune together at each breakpoint.
+
+   Breakpoints:  960px → tablet/stack    860px → nav burger    640px → phone
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Page shell — standard gutters, tightened on phones */
+.sf-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+.sf-page-narrow {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* Fluid headings — scale with viewport instead of a fixed px size */
+.sf-h1 { font-family: var(--font-heading); font-weight: 400; font-size: clamp(30px, 6vw, 46px); line-height: 1.12; }
+.sf-h2 { font-family: var(--font-heading); font-weight: 400; font-size: clamp(25px, 4.6vw, 34px); line-height: 1.2; }
+.sf-h3 { font-family: var(--font-heading); font-weight: 400; font-size: clamp(19px, 3vw, 24px); line-height: 1.25; }
+
+/* Equal-column grids */
+.sf-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+.sf-cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+
+/* Stat row with rule-between dividers. The divider is owned by CSS rather
+   than inline styles so it can be dropped on whichever tile starts a row
+   once the grid reflows to 2-up. */
+.sf-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); }
+.sf-stat-row > * { padding-left: var(--space-5); border-left: 1px solid var(--color-divider); }
+.sf-stat-row > *:first-child { padding-left: 0; border-left: none; }
+
+/* Asymmetric splits, named for where they're used */
+.sf-split-dash  { display: grid; grid-template-columns: 1.45fr 1fr; gap: 40px; align-items: start; }
+.sf-split-hero  { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: start; }
+.sf-split-side  { display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: start; }
+.sf-split-even  { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; }
+.sf-split-aside { display: grid; grid-template-columns: 1fr 190px; gap: var(--space-4); align-items: start; }
+
+/* Label-on-the-left detail row */
+.sf-row-label { display: grid; grid-template-columns: 160px 1fr; gap: var(--space-4); align-items: start; }
+
+/* Gap-analysis skill row: name · bar · note · score.
+   On phones it refolds to  name … score  /  bar  /  note. */
+.sf-skill-row {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 160px 1fr 160px 52px;
+  gap: var(--space-4);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+.sf-skill-name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sf-skill-note { font-size: 12px; font-style: italic; text-align: right; }
+.sf-skill-score {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 760px) {
+  .sf-skill-row {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2);
+    row-gap: 6px;
+    padding: 14px 0;
+  }
+  .sf-skill-bar  { grid-column: 1 / -1; order: 3; }
+  .sf-skill-note { grid-column: 1 / -1; order: 4; text-align: left; }
+  .sf-skill-score { order: 2; }
+}
+
+/* Any wide block (tables, charts) that should scroll rather than squash */
+.sf-scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Admin shell: fixed sidebar on desktop, scrollable tab strip on mobile */
+.sf-admin-shell { display: flex; min-height: 100vh; background: var(--color-bg); }
+.sf-admin-side {
+  width: 220px;
+  border-right: 1px solid var(--color-divider);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+.sf-admin-nav { flex: 1; padding: 12px 8px; }
+/* min-width:0 lets wide tables scroll inside instead of stretching the page */
+.sf-admin-main { flex: 1; min-width: 0; overflow: auto; padding: 40px 48px; }
+.sf-admin-foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--color-divider);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@media (max-width: 860px) {
+  .sf-admin-shell { flex-direction: column; }
+  .sf-admin-side {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-divider);
+    padding: 14px 0 0;
+  }
+  .sf-admin-nav {
+    display: flex;
+    gap: var(--space-1);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--space-2) var(--space-3);
+  }
+  .sf-admin-nav a { white-space: nowrap; }
+  .sf-admin-main { padding: 24px 16px 56px; }
+  .sf-admin-foot { flex-direction: row; align-items: center; gap: var(--space-5); }
+}
+
+/* Nav: full links on desktop, burger below 860px */
+.sf-nav-links { display: flex; align-items: center; gap: var(--space-4); }
+.sf-nav-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.sf-nav-burger:hover { border-color: var(--color-accent); color: var(--color-accent-700); }
+
+.sf-mobile-menu {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 49;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-divider);
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  overflow-y: auto;
+  animation: sf-menu-in 0.18s ease both;
+}
+@keyframes sf-menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.sf-mobile-link {
+  display: block;
+  padding: 14px 4px;
+  font-size: 16px;
+  border-bottom: 1px solid var(--color-divider);
+}
+.sf-mobile-link.is-active { color: var(--color-accent-700); }
+
+@media (max-width: 960px) {
+  .sf-split-dash,
+  .sf-split-hero,
+  .sf-split-side,
+  .sf-split-even,
+  .sf-split-aside {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+  .sf-cols-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+  .sf-nav-links { display: none; }
+  .sf-nav-burger { display: inline-flex; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+  .sf-page, .sf-page-narrow { padding: 28px 16px 64px; }
+  .sf-nav { padding: 0 var(--space-4); }
+  .sf-nav-tagline { display: none; }
+  .sf-cols-3 { grid-template-columns: 1fr; }
+  .sf-stat-row { grid-template-columns: repeat(2, 1fr); row-gap: var(--space-6); }
+  .sf-stat-row > *:nth-child(odd) { padding-left: 0; border-left: none; }
+  .sf-row-label { grid-template-columns: 1fr; gap: var(--space-1); }
+  .card { padding: var(--space-3); }
+  .sf-table th, .sf-table td { padding: 8px; font-size: 12px; white-space: nowrap; }
+  .hr { margin: var(--space-5) 0; }
+}
+
+/* Touch devices: hover styling sticks after a tap, so only apply it
+   where a real pointer exists. */
+@media (hover: none) {
+  .btn-primary:hover { background: transparent; }
+  .btn-secondary:hover { border-color: var(--color-divider); color: inherit; }
+  a:hover { color: inherit; }
+}

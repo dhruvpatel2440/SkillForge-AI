@@ -67,18 +67,13 @@ function SkillBar({ fill, pct, color }: { fill: number; pct?: number; color: str
 function SkillRow({ name, fillPct, bgPct, note, score, barColor }:
   { name: string; fillPct: number; bgPct?: number; note: string; score: number; barColor: string }) {
   return (
-    <div style={{
-      display: 'grid', alignItems: 'center',
-      gridTemplateColumns: '160px 1fr 160px 52px',
-      gap: 16, padding: '10px 0',
-      borderBottom: '1px solid var(--color-divider)',
-    }}>
-      <span style={{ fontFamily: 'var(--font-heading)', fontSize: 17, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        {name}
-      </span>
-      <SkillBar fill={fillPct} pct={bgPct} color={barColor} />
-      <span className="text-muted" style={{ fontSize: 12, fontStyle: 'italic', textAlign: 'right' }}>{note}</span>
-      <span style={{ fontFamily: 'var(--font-heading)', fontSize: 16, color: barColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+    <div className="sf-skill-row">
+      <span className="sf-skill-name">{name}</span>
+      <div className="sf-skill-bar">
+        <SkillBar fill={fillPct} pct={bgPct} color={barColor} />
+      </div>
+      <span className="sf-skill-note text-muted">{note}</span>
+      <span className="sf-skill-score" style={{ color: barColor }}>
         {score.toFixed(2)}
       </span>
     </div>
@@ -167,12 +162,12 @@ export default function GapAnalysis() {
   const scoreColor = gap.readiness_score >= 70 ? '#b68235' : gap.readiness_score >= 40 ? '#d97706' : '#dc2626'
 
   return (
-    <div style={{ maxWidth: 1160, margin: '0 auto', padding: '48px 24px' }}>
+    <div className="sf-page">
 
       {/* ── Header ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24, marginBottom: 32 }}>
-        <div style={{ flex: 1 }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 34, marginBottom: 6 }}>Gap analysis</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 24, marginBottom: 32 }}>
+        <div style={{ flex: '1 1 260px' }}>
+          <h2 className="sf-h2" style={{ marginBottom: 6 }}>Gap analysis</h2>
           <p className="text-muted" style={{ fontSize: 13, maxWidth: '72ch', lineHeight: 1.6 }}>
             {gap.target_role} · {totalRequired} required skills diffed against role postings.{' '}
             <span style={{ fontStyle: 'italic' }}>
@@ -199,7 +194,7 @@ export default function GapAnalysis() {
       <hr className="hr" style={{ marginBottom: 32 }} />
 
       {/* ── Two-column body ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 56, alignItems: 'start' }}>
+      <div className="sf-split-side">
 
         {/* LEFT: Radar chart */}
         <div>
@@ -339,8 +334,7 @@ export default function GapAnalysis() {
           </p>
           <div style={{ display: 'grid', gap: 12 }}>
             {gap.project_gaps.map((pg, i) => (
-              <div key={i} style={{
-                display: 'grid', gridTemplateColumns: '160px 1fr', gap: 16,
+              <div key={i} className="sf-row-label" style={{
                 padding: '12px 16px', border: '1px solid var(--color-divider)', borderRadius: 6,
               }}>
                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: 15, color: 'var(--color-accent)' }}>
