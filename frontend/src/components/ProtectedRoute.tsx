@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import LoadingScreen from './LoadingScreen'
 
 // Routes where returning users (onboarding done) should not go back
 const ONBOARDING_PATHS = ['/onboarding']
@@ -9,13 +10,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const location = useLocation()
 
   if (loading) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-        <div className="text-muted" style={{ fontFamily: 'var(--font-heading)', fontSize: 20 }}>
-          Loading…
-        </div>
-      </div>
-    )
+    return <LoadingScreen fullPage={false} />
   }
 
   if (!user) {

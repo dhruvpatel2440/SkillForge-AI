@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/AdminRoute'
 import AdminLayout from './components/admin/AdminLayout'
+import LoadingScreen from './components/LoadingScreen'
 
 const Landing = lazy(() => import('./pages/Landing'))
 const Login = lazy(() => import('./pages/Login'))
@@ -35,13 +36,7 @@ const AdminAuditLogs = lazy(() => import('./pages/admin/AdminAuditLogs'))
 const AdminSystem = lazy(() => import('./pages/admin/AdminSystem'))
 
 function FullPageSpinner() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      <div className="text-muted" style={{ fontFamily: 'var(--font-heading)', fontSize: 18 }}>
-        Loading…
-      </div>
-    </div>
-  )
+  return <LoadingScreen />
 }
 
 function AuthRedirect({ children }: { children: React.ReactNode }) {
