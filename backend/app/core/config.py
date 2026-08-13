@@ -1,3 +1,4 @@
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 from typing import List
@@ -40,6 +41,16 @@ class Settings(BaseSettings):
 
     # Admin
     admin_secret_key: str = "SkillForge@Admin2024"
+
+    @model_validator(mode="before")
+    @classmethod
+    def _strip_whitespace(cls, values):
+        """Guard against stray tabs/spaces from copy-pasting env vars into a
+        hosting dashboard (Render, Vercel, ...) — a leading/trailing tab is
+        invisible in most UIs but breaks httpx URL parsing outright."""
+        if isinstance(values, dict):
+            return {k: (v.strip() if isinstance(v, str) else v) for k, v in values.items()}
+        return values
 
     @property
     def cors_origins_list(self) -> List[str]:
